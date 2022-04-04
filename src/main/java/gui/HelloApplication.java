@@ -1,5 +1,10 @@
 package gui;
 
+<<<<<<<< HEAD:src/main/java/gui/HelloApplication.java
+package gui;
+
+========
+>>>>>>>> 400c18e3015b0426ec8eb62c96cd9ac8444c5262:src/main/java/HelloApplication.java
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
