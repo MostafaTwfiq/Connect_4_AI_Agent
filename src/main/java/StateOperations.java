@@ -22,7 +22,12 @@ public class StateOperations {
     }
 
     public static int getEmptySlotCount(byte[] state, int num){
-        return  1;
+        int count = 0;
+        for (int i = 1; i <= 42; i++) {
+            if (getSlotValue(state, i) == SlotState.EMPTY)
+                count++;
+        }
+        return  count;
     }
 
     private static int getSlotIndex(int num){
