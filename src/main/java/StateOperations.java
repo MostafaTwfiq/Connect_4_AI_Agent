@@ -5,11 +5,7 @@ public class StateOperations {
     public static byte[] setSlotValue(byte[] state, int num, SlotState slotState){
         int index = getSlotIndex(num);
         int slot_num = num % 4;
-        byte value;
-        if (slotState == SlotState.AGENT)
-            value = 0b10;
-        else
-            value = 0b01;
+        var value = slotState == SlotState.AGENT ? 0b10 : 0b01;
         var shift = slot_num == 0 ? 0 : (8-2*slot_num);
         state[index] |= value << shift;
         return  state;
