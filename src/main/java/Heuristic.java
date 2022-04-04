@@ -7,6 +7,18 @@ public class Heuristic {
     private static final int SCORE_2 = 2 ;
     private static final int SCORE_1 = 1 ;
     private static final int  max_slots=4;
+    private static int agent_score=0;
+    private static int user_score=0;
+
+    public static int getAgent_score(byte[][] board) {
+        scores(board);
+        return agent_score;
+    }
+
+    public static int getUser_score(byte[][] board) {
+        scores(board);
+        return user_score;
+    }
 
     public static int  score_evaluate (byte[] board){
         int score_sum=0;
@@ -27,7 +39,6 @@ public class Heuristic {
                 score_sum+=Diagonal_raising(board , i , j);
                 score_sum+=Diagonal_falling(board , i , STATE.COL_SIZE-j-1);
             }
-
         }
         return  score_sum;
     }
@@ -119,6 +130,49 @@ public class Heuristic {
     }
 
 
+   public static void scores(byte[][] board){
+
+      agent_score=0;
+      user_score=0;
+       for(int i=0 ; i<STATE.ROW_SIZE ; i++){
+           for(int j=0 ; j<STATE.COL_SIZE-3 ; j++){
+               if((board[i][j]==STATE.agent_slot) && (board[i][j+1]==STATE.agent_slot) && (board[i][j+2]==STATE.agent_slot) && (board[i][j+3]==STATE.agent_slot))
+                   agent_score++;
+               else if((board[i][j]==STATE.user_slot) && (board[i][j+1]==STATE.user_slot) && (board[i][j+2]==STATE.user_slot) && (board[i][j+3]==STATE.user_slot))
+                   user_score++;
+           }
+       }
+
+
+       for(int i=0 ; i<STATE.COL_SIZE ; i++) {
+           for(int j=0 ; j<STATE.ROW_SIZE-3 ; j++){
+               if((board[j][i]==STATE.agent_slot) && (board[j+1][i]==STATE.agent_slot) && (board[j+2][i]==STATE.agent_slot) && (board[j+3][i]==STATE.agent_slot))
+               agent_score++;
+               else if((board[j][i]==STATE.user_slot) && (board[j+1][i]==STATE.user_slot) && (board[j+2][i]==STATE.user_slot) && (board[j+3][i]==STATE.user_slot))
+               user_score++;
+           }
+       }
+
+       for(int i=0; i<STATE.ROW_SIZE-3 ; i++){
+           for(int j=0 ; j<STATE.COL_SIZE-3 ; j++){
+               if((board[i][j]==STATE.agent_slot) && (board[i+1][j+1]==STATE.agent_slot) && (board[i+2][j+2]==STATE.agent_slot) && (board[i+3][j+3]==STATE.agent_slot))
+               agent_score++;
+               else if((board[i][j]==STATE.user_slot) && (board[i+1][j+1]==STATE.user_slot) && (board[i+2][j+2]==STATE.user_slot) && (board[i+3][j+3]==STATE.user_slot))
+               user_score++;
+
+           }
+       }
+       for(int i=0; i<STATE.ROW_SIZE-3 ; i++){
+           for(int j=max_slots-1 ; j<STATE.COL_SIZE ; j++){
+               if((board[i][j]==STATE.agent_slot) && (board[i+1][j-1]==STATE.agent_slot) && (board[i+2][j-2]==STATE.agent_slot) && (board[i+3][j-3]==STATE.agent_slot))
+                   agent_score++;
+               else if((board[i][j]==STATE.user_slot) && (board[i+1][j-1]==STATE.user_slot) && (board[i+2][j-2]==STATE.user_slot) && (board[i+3][j-3]==STATE.user_slot))
+                   user_score++;
+           }
+       }
+
+
+   }
 
 
 
