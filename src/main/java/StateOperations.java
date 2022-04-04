@@ -13,8 +13,12 @@ public class StateOperations {
 
     public static SlotState getSlotValue(byte[] state, int num){
         var index = getSlotIndex(num);
+        byte mask[] = {3, -64, 48, 12};
+        int slot_num = num % 4;
         var b_arr = state[index];
-        return  SlotState.EMPTY;
+        var shift = slot_num == 0 ? 0 : (8-2*slot_num);
+        var value = state[index] & mask[slot_num] >> shift;
+        return  SlotState.values()[value];
     }
 
     public static int getEmptySlotCount(byte[] state, int num){
