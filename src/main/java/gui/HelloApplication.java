@@ -1,4 +1,4 @@
-package com.example.connect_4_ai_agent;
+package gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
