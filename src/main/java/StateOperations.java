@@ -2,7 +2,8 @@
 
 public class StateOperations {
 
-    public static byte[] setSlotValue(byte[] state, int num, SlotState slotState){
+    public static byte[] setSlotValue(byte[] state, int row, int col, SlotState slotState){
+        int num = row * 7 + col;
         int index = getSlotIndex(num);
         int slot_num = num % 4;
         var value = slotState == SlotState.AGENT ? 0b10 : 0b01;
@@ -11,7 +12,8 @@ public class StateOperations {
         return  state;
     }
 
-    public static SlotState getSlotValue(byte[] state, int num){
+    public static SlotState getSlotValue(byte[] state,  int row, int col){
+        int num = row * 7 + col;
         var index = getSlotIndex(num);
         byte mask[] = {3, -64, 48, 12};
         int slot_num = num % 4;
@@ -21,11 +23,13 @@ public class StateOperations {
         return  SlotState.values()[value];
     }
 
-    public static int getEmptySlotCount(byte[] state, int num){
+    public static int getEmptySlotCount(byte[] state, int board_row, int board_col){
         int count = 0;
-        for (int i = 1; i <= 42; i++) {
-            if (getSlotValue(state, i) == SlotState.EMPTY)
-                count++;
+        for (int i = 1; i <= board_row; i++) {
+            for (int j = 1; j <= board_col; j++) {
+                if (getSlotValue(state, i, j) == SlotState.EMPTY)
+                    count++;
+            }
         }
         return  count;
     }
