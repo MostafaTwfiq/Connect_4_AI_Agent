@@ -1,5 +1,3 @@
-package com.example.connect_4_ai_agent;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
