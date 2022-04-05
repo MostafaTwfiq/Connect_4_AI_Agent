@@ -1,4 +1,5 @@
 public class StateOperations {
+
     public static byte[] setSlotValue(byte[] state, int row, int col, SlotState slotState){
         int num = row * 7 + col;
         int index = getSlotIndex(num);
