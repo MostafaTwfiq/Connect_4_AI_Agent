@@ -3,11 +3,11 @@ public class IntStateOperations {
     // int1
     // col1      col2       col3       col4
     // 100000010 101000011 000000000  00000
-    // 31---23    22-----14    13-------5   4--0
+    // 31---23    22--14    13--5     4--0
     // int 2
     // col5      col6       col7       col4
     // 100000010 101000011 000000000  00000
-    // 31---23    22-----14    13-------5   4--0
+    // 31---23    22--14    13---5     4--0
     public static int[] setSlotValue(int statep1, int statep2, int col, SlotState slotState){
         if (col == 4)
             return setSlotColFour(statep1, statep2, slotState);
