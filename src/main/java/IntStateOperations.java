@@ -38,8 +38,18 @@ public class IntStateOperations {
     }
 
     //TODO: Implement Empty Slot Count
-    public static int getEmptySlotCount(byte[] state, int board_row, int board_col){
+    public static int getEmptySlotCount(int statep1, int statep2){
         int count = 0;
+        for (int col = 1; col <= 7; col++) {
+            if (col == 4)
+                continue;
+            int from = col < 4 ? (3-col) * 9 + 5: (7-col) * 9 + 5;
+            int to = from + 9 - 1;
+            int colValue = col < 4 ? bitRange(statep1, from, to) : bitRange(statep2, from, to);
+            int countCol = getColumnCount(colValue);
+            count += countCol;
+        }
+        count += getColumnCount(statep2);
         return  count;
     }
 
