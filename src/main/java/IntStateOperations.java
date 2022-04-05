@@ -24,7 +24,7 @@ public class IntStateOperations {
         arr[ind] = Integer.rotateRight(arr[ind], from) | countCol;
         arr[ind] = Integer.rotateRight(arr[ind], 3) ;
         arr[ind] = Integer.rotateRight(arr[ind], 6 - countCol)| bitVal;
-        arr[ind] = Integer.rotateRight(arr[ind],31- to + 1);
+        arr[ind] = Integer.rotateRight(arr[ind],31 - to + 1);
         return arr;
     }
 
