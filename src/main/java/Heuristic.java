@@ -10,10 +10,6 @@ public class Heuristic {
     private static int agent_score=0;
     private static int user_score=0;
 
-    public int getScore() {
-        return 1; //TODO: implementation
-    }
-
     public static int getAgent_score(byte[][] board) {
         scores(board);
         return agent_score;
