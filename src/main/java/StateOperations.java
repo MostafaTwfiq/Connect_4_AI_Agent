@@ -21,16 +21,16 @@ public class StateOperations {
         return  SlotState.values()[value];
     }
 
-    public static int getEmptySlotCount(byte[] state, int board_row, int board_col){
-        int count = 0;
-        for (int i = 1; i <= board_row; i++) {
-            for (int j = 1; j <= board_col; j++) {
-                if (getSlotValue(state, i, j) == SlotState.EMPTY)
-                    count++;
-            }
-        }
-        return  count;
-    }
+//    public static int getEmptySlotCount(byte[] state, int board_row, int board_col){
+//        int count = 0;
+//        for (int i = 1; i <= board_row; i++) {
+//            for (int j = 1; j <= board_col; j++) {
+//                if (getSlotValue(state, i, j) == SlotState.EMPTY)
+//                    count++;
+//            }
+//        }
+//        return  count;
+//    }
 
     private static int getSlotIndex(int num){
         int index = (int) Math.floor(num / 4);

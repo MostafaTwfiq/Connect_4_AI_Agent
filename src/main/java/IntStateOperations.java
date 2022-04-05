@@ -13,8 +13,8 @@ public class IntStateOperations {
             return setSlotColFour(statep1, statep2, slotState);
         int arr[] = {statep1, statep2};
         int from = col < 4 ? (3-col) * 9 + 5: (7-col) * 9 + 5;
-        int to = from + 9;
-        int bitVal = slotState == SlotState.USER ? 0 : 1;
+        int to = from + 9 - 1;
+        int bitVal = slotState == SlotState.USER? 0 : 1;
         int colValue = col < 4 ? bitRange(statep1, from, to) : bitRange(statep2, from, to);
         int countCol = getColumnCount(colValue);
         if (colValue == 6)
@@ -22,9 +22,9 @@ public class IntStateOperations {
         countCol++;
         int ind = col < 4 ? 0 : 1;
         arr[ind] = Integer.rotateRight(arr[ind], from) | countCol;
-        arr[ind] = Integer.rotateRight(arr[ind], 3) | bitVal;
-        arr[ind] = Integer.rotateRight(arr[ind], 6);
-        arr[ind] = Integer.rotateRight(arr[ind],31-to);
+        arr[ind] = Integer.rotateRight(arr[ind], 3) ;
+        arr[ind] = Integer.rotateRight(arr[ind], 6 - countCol)| bitVal;
+        arr[ind] = Integer.rotateRight(arr[ind],31- to + 1);
         return arr;
     }
 
@@ -34,7 +34,6 @@ public class IntStateOperations {
         return  arr;
     }
     public static SlotState getSlotValue(int statep1, int statep2, int col){
-
         return SlotState.AGENT;
     }
 
