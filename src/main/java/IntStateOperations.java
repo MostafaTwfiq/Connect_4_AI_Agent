@@ -37,7 +37,6 @@ public class IntStateOperations {
         return SlotState.AGENT;
     }
 
-    //TODO: Implement Empty Slot Count
     public static int getEmptySlotCount(int statep1, int statep2){
         int count = 0;
         for (int col = 1; col <= 7; col++) {
