@@ -44,12 +44,12 @@ public class IntStateOperations {
         return  count;
     }
 
-    public static int bitRange(int value, int from, int to) {
+    private static int bitRange(int value, int from, int to) {
         int waste = 31 - to;
         return ((value << waste) >> (waste + from)) & 0x000001FF;
     }
 
-    public static int getColumnCount(int value) {
+    private static int getColumnCount(int value) {
         int from = 0;
         int to = 2;
         int waste = 31 - to;
