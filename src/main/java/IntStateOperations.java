@@ -2,11 +2,13 @@ public class IntStateOperations {
 
     public static int[] playAtCol(int statep1, int statep2, int col, SlotState slotState){
         int arr[] = {statep1, statep2};
+        int colCount = numOfColCount(statep1, statep2, col);
+        if(colCount == 6)
+            return  arr;
         int player = SlotState.AGENT == slotState?1:0;
         int nColStartbit = col * 9 + 6;
-        int colCont = numOfColCount(statep1, statep2, col);
         int bitPos = getBitStatePos(statep1, statep2, col);
-        int ind = (col > 3 || (col == 3 && colCont == 5))? 1 : 0;
+        int ind = (col > 3 || (col == 3 && colCount == 5))? 1 : 0;
         int posCount = nColStartbit < 32? 31-nColStartbit-2: 63-nColStartbit-2;
         arr[ind] |= ((makeBit(bitPos)) * player);
         arr[ind] += makeBit(posCount);
