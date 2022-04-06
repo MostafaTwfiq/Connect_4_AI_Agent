@@ -1,4 +1,5 @@
 public enum SlotState {
     USER,
-    AGENT
+    AGENT,
+    EMPTY
 }

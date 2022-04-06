@@ -1,67 +1,49 @@
 public class IntStateOperations {
 
-    // int1
-    // col1      col2       col3       col4
-    // 100000010 101000011 000000000  00000
-    // 31---23    22--14    13--5     4--0
-    // int 2
-    // col5      col6       col7       col4
-    // 100000010 101000011 000000000  00000
-    // 31---23    22--14    13---5     4--0
-    public static int[] setSlotValue(int statep1, int statep2, int col, SlotState slotState){
-        if (col == 4)
-            return setSlotColFour(statep1, statep2, slotState);
+    public static int[] playAtCol(int statep1, int statep2, int col, SlotState slotState){
         int arr[] = {statep1, statep2};
-        int from = col < 4 ? (3-col) * 9 + 5: (7-col) * 9 + 5;
-        int to = from + 9 - 1;
-        int bitVal = slotState == SlotState.USER? 0 : 1;
-        int colValue = col < 4 ? bitRange(statep1, from, to) : bitRange(statep2, from, to);
-        int countCol = getColumnCount(colValue);
-        if (colValue == 6)
-            return arr;
-        countCol++;
-        int ind = col < 4 ? 0 : 1;
-        arr[ind] = Integer.rotateRight(arr[ind], from) | countCol;
-        arr[ind] = Integer.rotateRight(arr[ind], 3) ;
-        arr[ind] = Integer.rotateRight(arr[ind], 6 - countCol)| bitVal;
-        arr[ind] = Integer.rotateRight(arr[ind], countCol);
-        arr[ind] = Integer.rotateRight(arr[ind],31- to );
+        int player = SlotState.AGENT == slotState?1:0;
+        int nColStartbit = col * 9 + 6;
+        int colCont = numOfColCount(statep1, statep2, col);
+        int bitPos = getBitStatePos(statep1, statep2, col);
+        int ind = (col > 3 || (col == 3 && colCont == 5))? 1 : 0;
+        int posCount = nColStartbit < 32? 31-nColStartbit-2: 63-nColStartbit-2;
+        arr[ind] = arr[ind] | ((makeBit(bitPos)) * player);
+        arr[ind] += makeBit(posCount);
         return arr;
     }
 
-    //TODO: Implement The Forth Col. Set
-    private static  int[] setSlotColFour(int statep1, int statep2, SlotState slotState){
-        int arr[] = {statep1, statep2};
-        return  arr;
-    }
-    public static SlotState getSlotValue(int statep1, int statep2, int col){
-        return SlotState.AGENT;
+    private static int getBitStatePos(int statep1, int statep2, int col){
+        int row = numOfColCount(statep1, statep2, col);
+        int numOfbits = col * 9 + row;
+        return  numOfbits < 31? 31 - numOfbits : 63 - numOfbits;
     }
 
-    public static int getEmptySlotCount(int statep1, int statep2){
-        int count = 0;
-        for (int col = 1; col <= 7; col++) {
-            if (col == 4)
-                continue;
-            int from = col < 4 ? (3-col) * 9 + 5: (7-col) * 9 + 5;
-            int to = from + 9 - 1;
-            int colValue = col < 4 ? bitRange(statep1, from, to) : bitRange(statep2, from, to);
-            int countCol = getColumnCount(colValue);
-            count += countCol;
+    public static int numOfColCount(int statep1, int statep2, int col){
+        int row = 0;
+        int nColStartbit = col * 9 + 6;
+        if (nColStartbit < 32){
+            row = Integer.rotateRight(statep1,31-nColStartbit-2) & 7;
+        }else {
+            row = Integer.rotateRight(statep2, 63-nColStartbit-2) & 7;
         }
-        count += getColumnCount(statep2);
-        return  count;
+        return row;
     }
 
-    private static int bitRange(int value, int from, int to) {
-        int waste = 31 - to;
-        return ((value << waste) >> (waste + from)) & 0x000001FF;
+    public static int[] setSlot(int statep1, int statep2, int slotNo, SlotState slotState){
+        int arr[] = {statep1, statep2};
+
+        return arr;
     }
 
-    private static int getColumnCount(int value) {
-        int from = 0;
-        int to = 2;
-        int waste = 31 - to;
-        return ((value << waste) >> (waste + from)) & 0x00000007;
+    public static int[] clear_slot(int statep1, int statep2, int col){
+        int arr[] = {statep1, statep2};
+
+        return arr;
     }
+
+    private static int makeBit(int pow){
+        return (int) Math.pow(2, pow);
+    }
+
 }
