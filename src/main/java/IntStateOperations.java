@@ -30,11 +30,6 @@ public class IntStateOperations {
         return row;
     }
 
-    public static int[] setSlot(int statep1, int statep2, int slotNo, SlotState slotState){
-        int arr[] = {statep1, statep2};
-
-        return arr;
-    }
 
     public static int[] clear_slot(int statep1, int statep2, int col){
         int arr[] = {statep1, statep2};
