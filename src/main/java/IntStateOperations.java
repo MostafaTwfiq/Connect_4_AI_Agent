@@ -8,7 +8,7 @@ public class IntStateOperations {
         int bitPos = getBitStatePos(statep1, statep2, col);
         int ind = (col > 3 || (col == 3 && colCont == 5))? 1 : 0;
         int posCount = nColStartbit < 32? 31-nColStartbit-2: 63-nColStartbit-2;
-        arr[ind] = arr[ind] | ((makeBit(bitPos)) * player);
+        arr[ind] |= ((makeBit(bitPos)) * player);
         arr[ind] += makeBit(posCount);
         return arr;
     }
