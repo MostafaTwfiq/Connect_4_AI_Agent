@@ -1,43 +1,93 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class StateOperations {
 
-    public static byte[] setSlotValue(byte[] state, int row, int col, SlotState slotState){
-        int num = row * 7 + col;
-        int index = getSlotIndex(num);
-        int slot_num = num % 4;
-        var value = slotState == SlotState.AGENT ? 0b10 : 0b01;
-        var shift = slot_num == 0 ? 0 : (8-2*slot_num);
-        state[index] |= value << shift;
-        return  state;
+    public static final byte ROW_SIZE = 6;
+    public static final byte COL_SIZE = 7;
+
+    public static long playAtCol(long state, int col, SlotState slotState) {
+        int colCount = numOfElementsAtCol(state, col);
+        int colStateStartBit = (ROW_SIZE + 3) * col + ROW_SIZE;
+        int slotIndex = (ROW_SIZE + 3) * col + colCount;
+        state = setSlotValue(state, slotIndex, slotState);
+        state += (1L << (63 - colStateStartBit + 2));
+        return state;
     }
 
-    public static SlotState getSlotValue(byte[] state,  int row, int col){
-        int num = row * 7 + col;
-        var index = getSlotIndex(num);
-        byte mask[] = {3, -64, 48, 12};
-        int slot_num = num % 4;
-        var b_arr = state[index];
-        var shift = slot_num == 0 ? 0 : (8-2*slot_num);
-        var value = state[index] & mask[slot_num] >> shift;
-        return  SlotState.values()[value];
+    public static int numOfElementsAtCol(long state, int col) {
+        // col state start bit = 9 * col + 6
+        return (int) ((state >>> 61 - ((ROW_SIZE + 3) * col + ROW_SIZE)) & 0b00000111);
     }
 
-    public static int getEmptySlotCount(byte[] state, int board_row, int board_col){
+    private static long setSlotValue(long state, int slotIndex, SlotState slotState){
+        state = clearSlot(state, slotIndex);
+        return state | (((long) slotState.getValue()) << (63 - slotIndex));
+    }
+
+    private static long clearSlot(long state, int slotIndex) {
+        return state & (~(1L << (63 - slotIndex)));
+    }
+
+    private static SlotState getSlotState(long state, int slotIndex, int col) {
+        int colCount = numOfElementsAtCol(state, col);
+        if (col * (ROW_SIZE + 3) + colCount >= slotIndex)
+            return SlotState.EMPTY;
+
+        return (state & (1L << (63 - slotIndex))) >>> (63 - slotIndex) == SlotState.AGENT.getValue()
+                ? SlotState.AGENT
+                : SlotState.USER;
+    }
+
+    private static int getEmptySlotsCount(long state) {
         int count = 0;
-        for (int i = 1; i <= board_row; i++) {
-            for (int j = 1; j <= board_col; j++) {
-                if (getSlotValue(state, i, j) == SlotState.EMPTY)
-                    count++;
+        for (int col = 0; col < COL_SIZE; col++)
+            count += ROW_SIZE - numOfElementsAtCol(state, col);
+
+        return count;
+    }
+
+    public List<Long> getStateChildren(long state, SlotState slotState) {
+        if (slotState == SlotState.EMPTY)
+            throw new IllegalArgumentException();
+
+        ArrayList<Long> children = new ArrayList<>();
+        for (int col = 0; col < COL_SIZE; col++) {
+            if (numOfElementsAtCol(state, col) < ROW_SIZE) {
+                children.add(playAtCol(state, col, slotState));
             }
         }
-        return  count;
+
+        return children;
     }
 
-    private static int getSlotIndex(int num){
-        int index = (int) Math.floor(num / 4);
-        int slot_num = num % 4 ;
-        if (slot_num == 0 && num != 0)
-            index = (int) Math.floor((num-1) / 4);
-        return index;
+    public List<SlotIndex> getAgentSlots(long state) {
+        return getPlayerSlots(state, SlotState.AGENT);
     }
 
+    public List<SlotIndex> getUserSlots(long state) {
+        return getPlayerSlots(state, SlotState.USER);
+    }
+
+    private List<SlotIndex> getPlayerSlots(long state, SlotState player) {
+        ArrayList<SlotIndex> slots = new ArrayList<>();
+        for (int col = 0, slotIndex; col < COL_SIZE; col++) {
+            slotIndex = (ROW_SIZE + 3) * col;
+            for (int row = 0; row < ROW_SIZE; row++) {
+                if (getSlotState(state, slotIndex + row, col) == player) {
+                    slots.add(new SlotIndex((byte) row, (byte) col));
+                }
+            }
+        }
+
+        return slots;
+    }
+
+    public static byte getRowSize() {
+        return ROW_SIZE;
+    }
+
+    public static byte getColSize() {
+        return COL_SIZE;
+    }
 }

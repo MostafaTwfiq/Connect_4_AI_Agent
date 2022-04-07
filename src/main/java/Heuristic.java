@@ -48,9 +48,9 @@ public class Heuristic {
         int user_slots=0;
         int empty_slots=0;
         for(int i=C;i<C+max_slots;i++){
-            if(StateOperations.getSlotValue(board,R,i)==SlotState.AGENT)
+            if(StateOperations.getSlotValue(board,R,i)== SlotState.AGENT)
                 agent_slots++;
-            else if(StateOperations.getSlotValue(board,R,i)==SlotState.AGENT)
+            else if(StateOperations.getSlotValue(board,R,i)== SlotState.AGENT)
                 user_slots++;
             else empty_slots++;
         }
@@ -63,9 +63,9 @@ public class Heuristic {
         int user_slots=0;
         int empty_slots=0;
         for(int i=R ; i<R+max_slots ; i++){
-            if(StateOperations.getSlotValue(board,i,C)==SlotState.AGENT)
+            if(StateOperations.getSlotValue(board,i,C)== SlotState.AGENT)
                 agent_slots++;
-            else if(StateOperations.getSlotValue(board,i,C)==SlotState.AGENT)
+            else if(StateOperations.getSlotValue(board,i,C)== SlotState.AGENT)
                 user_slots++;
             else empty_slots++;
         }
@@ -80,9 +80,9 @@ public class Heuristic {
 
         for(int i=R ; i<R+max_slots ; i++)
         {
-            if(StateOperations.getSlotValue(board,i,C)==SlotState.USER)
+            if(StateOperations.getSlotValue(board,i,C)== SlotState.USER)
                 user_slots++;
-            else if(StateOperations.getSlotValue(board,i,C)==SlotState.AGENT)
+            else if(StateOperations.getSlotValue(board,i,C)== SlotState.AGENT)
                 agent_slots++;
             else empty_slots++;
             C++;
@@ -97,9 +97,9 @@ public class Heuristic {
 
         for(int i=R ; i<R+max_slots ; i++)
         {
-            if(StateOperations.getSlotValue(board,i,C)==SlotState.USER)
+            if(StateOperations.getSlotValue(board,i,C)== SlotState.USER)
                 user_slots++;
-            else if(StateOperations.getSlotValue(board,i,C)==SlotState.AGENT)
+            else if(StateOperations.getSlotValue(board,i,C)== SlotState.AGENT)
                 agent_slots++;
             else empty_slots++;
             C--;
@@ -136,9 +136,9 @@ public class Heuristic {
       user_score=0;
        for(int i=0 ; i<State.ROW_SIZE ; i++){
            for(int j=0 ; j<State.COL_SIZE-3 ; j++){
-               if((StateOperations.getSlotValue(board,i,j)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i,j+1)==SlotState.AGENT) && (StateOperations.getSlotValue(board, i,j+2)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i,j+3)==SlotState.AGENT))
+               if((StateOperations.getSlotValue(board,i,j)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i,j+1)== SlotState.AGENT) && (StateOperations.getSlotValue(board, i,j+2)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i,j+3)== SlotState.AGENT))
                    agent_score++;
-               else if((StateOperations.getSlotValue(board,i,j)==SlotState.USER) && (StateOperations.getSlotValue(board,i,j+1)==SlotState.USER) && (StateOperations.getSlotValue(board,i,j+2)==SlotState.USER) && (StateOperations.getSlotValue(board,i,j+3)==SlotState.USER))
+               else if((StateOperations.getSlotValue(board,i,j)== SlotState.USER) && (StateOperations.getSlotValue(board,i,j+1)== SlotState.USER) && (StateOperations.getSlotValue(board,i,j+2)== SlotState.USER) && (StateOperations.getSlotValue(board,i,j+3)== SlotState.USER))
                    user_score++;
            }
        }
@@ -146,27 +146,27 @@ public class Heuristic {
 
        for(int i=0 ; i<State.COL_SIZE ; i++) {
            for(int j=0 ; j<State.ROW_SIZE-3 ; j++){
-               if((StateOperations.getSlotValue(board,j,i)==SlotState.AGENT) && (StateOperations.getSlotValue(board,j+1,i)==SlotState.AGENT) && (StateOperations.getSlotValue(board,j+2,i)==SlotState.AGENT) && (StateOperations.getSlotValue(board,j+3,i)==SlotState.AGENT))
+               if((StateOperations.getSlotValue(board,j,i)== SlotState.AGENT) && (StateOperations.getSlotValue(board,j+1,i)== SlotState.AGENT) && (StateOperations.getSlotValue(board,j+2,i)== SlotState.AGENT) && (StateOperations.getSlotValue(board,j+3,i)== SlotState.AGENT))
                agent_score++;
-               else if((StateOperations.getSlotValue(board,j,i)==SlotState.USER) && (StateOperations.getSlotValue(board,j+1,i)==SlotState.USER) && (StateOperations.getSlotValue(board,j+2,i)==SlotState.USER) && (StateOperations.getSlotValue(board,j+3,i)==SlotState.USER))
+               else if((StateOperations.getSlotValue(board,j,i)== SlotState.USER) && (StateOperations.getSlotValue(board,j+1,i)== SlotState.USER) && (StateOperations.getSlotValue(board,j+2,i)== SlotState.USER) && (StateOperations.getSlotValue(board,j+3,i)== SlotState.USER))
                user_score++;
            }
        }
 
        for(int i=0; i<State.ROW_SIZE-3 ; i++){
            for(int j=0 ; j<State.COL_SIZE-3 ; j++){
-               if((StateOperations.getSlotValue(board,i,j)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i+1,j+1)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i+2,j+2)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i+3,j+3)==SlotState.AGENT))
+               if((StateOperations.getSlotValue(board,i,j)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i+1,j+1)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i+2,j+2)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i+3,j+3)== SlotState.AGENT))
                agent_score++;
-               else if((StateOperations.getSlotValue(board,i,j)==SlotState.USER) && (StateOperations.getSlotValue(board,i+1,j+1)==SlotState.USER) && (StateOperations.getSlotValue(board,i+2,j+2)==SlotState.USER) && (StateOperations.getSlotValue(board,i+3,j+3)==SlotState.USER))
+               else if((StateOperations.getSlotValue(board,i,j)== SlotState.USER) && (StateOperations.getSlotValue(board,i+1,j+1)== SlotState.USER) && (StateOperations.getSlotValue(board,i+2,j+2)== SlotState.USER) && (StateOperations.getSlotValue(board,i+3,j+3)== SlotState.USER))
                user_score++;
 
            }
        }
        for(int i=0; i<State.ROW_SIZE-3 ; i++){
            for(int j=max_slots-1 ; j<State.COL_SIZE ; j++){
-               if((StateOperations.getSlotValue(board,i,j)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i+1,j-1)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i+2,j-2)==SlotState.AGENT) && (StateOperations.getSlotValue(board,i+3,j-3)==SlotState.AGENT))
+               if((StateOperations.getSlotValue(board,i,j)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i+1,j-1)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i+2,j-2)== SlotState.AGENT) && (StateOperations.getSlotValue(board,i+3,j-3)== SlotState.AGENT))
                    agent_score++;
-               else if((StateOperations.getSlotValue(board,i,j)==SlotState.USER) && (StateOperations.getSlotValue(board,i+1,j-1)==SlotState.USER) && (StateOperations.getSlotValue(board,i+2,j-2)==SlotState.USER) && (StateOperations.getSlotValue(board,i+3,j-3)==SlotState.USER))
+               else if((StateOperations.getSlotValue(board,i,j)== SlotState.USER) && (StateOperations.getSlotValue(board,i+1,j-1)== SlotState.USER) && (StateOperations.getSlotValue(board,i+2,j-2)== SlotState.USER) && (StateOperations.getSlotValue(board,i+3,j-3)== SlotState.USER))
                    user_score++;
            }
        }
