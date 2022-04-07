@@ -1,4 +1,5 @@
 package gui;
+import algorithms.MiniMax;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,6 +18,12 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+
+        var minmax = new MiniMax(15);
+
+        var node = minmax.max(0, 0);
+
+        System.out.println(node.getState());
+        System.out.println(node.getScore());
     }
 }
