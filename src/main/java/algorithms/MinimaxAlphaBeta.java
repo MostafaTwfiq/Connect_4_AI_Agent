@@ -10,7 +10,7 @@ public class MinimaxAlphaBeta {
         return value.getKey();
     }
 
-    private Pair<long, double> maximize(long state, double alpha, double beta) {
+    private Pair<Long, Double> maximize(long state, double alpha, double beta) {
         if (StateOperations.isTerminal())
             return StateOperations.evalu();
         long maxChild = 0;
@@ -29,11 +29,11 @@ public class MinimaxAlphaBeta {
                 alpha = maxUtility
         }
 
-        return new Pair<long, double>(maxChild, maxUtility);
+        return new Pair<Long, Double>(maxChild, maxUtility);
 
 
     }
 
-    private Pair<long, double> minimize(long state, double alpha, double beta) {
+    private Pair<Long, Double> minimize(long state, double alpha, double beta) {
     }
 }
