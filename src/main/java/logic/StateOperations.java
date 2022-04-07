@@ -1,17 +1,19 @@
+package logic;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class StateOperations {
 
-    public static final byte ROW_SIZE = 6;
-    public static final byte COL_SIZE = 7;
+    private static final byte ROW_SIZE = 6;
+    private static final byte COL_SIZE = 7;
 
     public static long playAtCol(long state, int col, SlotState slotState) {
         int colCount = numOfElementsAtCol(state, col);
         int colStateStartBit = (ROW_SIZE + 3) * col + ROW_SIZE;
         int slotIndex = (ROW_SIZE + 3) * col + colCount;
         state = setSlotValue(state, slotIndex, slotState);
-        state += (1L << (63 - colStateStartBit + 2));
+        state += (1L << (63 - colStateStartBit - 2));
         return state;
     }
 
@@ -29,9 +31,11 @@ public class StateOperations {
         return state & (~(1L << (63 - slotIndex)));
     }
 
-    private static SlotState getSlotState(long state, int slotIndex, int col) {
+
+    public static SlotState getSlotState(long state, int row, int col) {
+        int slotIndex = (ROW_SIZE + 3) * col + row;
         int colCount = numOfElementsAtCol(state, col);
-        if (col * (ROW_SIZE + 3) + colCount >= slotIndex)
+        if (slotIndex >= col * (ROW_SIZE + 3) + colCount)
             return SlotState.EMPTY;
 
         return (state & (1L << (63 - slotIndex))) >>> (63 - slotIndex) == SlotState.AGENT.getValue()
@@ -39,7 +43,7 @@ public class StateOperations {
                 : SlotState.USER;
     }
 
-    private static int getEmptySlotsCount(long state) {
+    public static int getEmptySlotsCount(long state) {
         int count = 0;
         for (int col = 0; col < COL_SIZE; col++)
             count += ROW_SIZE - numOfElementsAtCol(state, col);
@@ -61,20 +65,19 @@ public class StateOperations {
         return children;
     }
 
-    public List<SlotIndex> getAgentSlots(long state) {
+    public static List<SlotIndex> getAgentSlots(long state) {
         return getPlayerSlots(state, SlotState.AGENT);
     }
 
-    public List<SlotIndex> getUserSlots(long state) {
+    public static List<SlotIndex> getUserSlots(long state) {
         return getPlayerSlots(state, SlotState.USER);
     }
 
-    private List<SlotIndex> getPlayerSlots(long state, SlotState player) {
+    private static List<SlotIndex> getPlayerSlots(long state, SlotState player) {
         ArrayList<SlotIndex> slots = new ArrayList<>();
-        for (int col = 0, slotIndex; col < COL_SIZE; col++) {
-            slotIndex = (ROW_SIZE + 3) * col;
+        for (int col = 0; col < COL_SIZE; col++) {
             for (int row = 0; row < ROW_SIZE; row++) {
-                if (getSlotState(state, slotIndex + row, col) == player) {
+                if (getSlotState(state, row, col) == player) {
                     slots.add(new SlotIndex((byte) row, (byte) col));
                 }
             }
@@ -89,5 +92,23 @@ public class StateOperations {
 
     public static byte getColSize() {
         return COL_SIZE;
+    }
+
+    public static void printState(long state) {
+        for (int row = ROW_SIZE - 1; row >= 0; row--) {
+            for (int col = 0; col < COL_SIZE; col++) {
+                SlotState slotState = getSlotState(state, row, col);
+                if (slotState == SlotState.EMPTY) {
+                    System.out.print(" \t");
+                } else if (slotState == SlotState.AGENT) {
+                    System.out.print("X\t");
+                } else if (slotState == SlotState.USER) {
+                    System.out.print("O\t");
+                } else {
+                    System.out.print("R\t");
+                }
+            }
+            System.out.println();
+        }
     }
 }

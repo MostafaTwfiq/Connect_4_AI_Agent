@@ -1,3 +1,5 @@
+package logic;
+
 public class SlotIndex {
 
     private byte row;

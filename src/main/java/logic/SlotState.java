@@ -1,3 +1,5 @@
+package logic;
+
 public enum SlotState {
     AGENT(0),
     USER(1),
