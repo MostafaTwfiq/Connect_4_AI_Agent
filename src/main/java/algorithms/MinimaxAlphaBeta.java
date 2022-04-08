@@ -1,9 +1,11 @@
-//package algorithms;
+package algorithms;
 //
-//import javafx.util.Pair;
-//import logic.StateOperations;
-//
-//public class MinimaxAlphaBeta {
+import javafx.util.Pair;
+import logic.StateOperations;
+
+public class MinimaxAlphaBeta {
+    public MinimaxAlphaBeta(int k) {
+    }
 //
 //    public long decision(long state){
 //        var value = maximize(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -36,4 +38,4 @@
 //
 //    private Pair<Long, Double> minimize(long state, double alpha, double beta) {
 //    }
-//}
+}

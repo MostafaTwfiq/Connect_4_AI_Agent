@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="646.0" style="-fx-background-color: linear-gradient(to bottom right, #E1BEE7, #B2EBF2);;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.startPage">
+
+      <Button id="button" layoutX="492.0" layoutY="572.0" mnemonicParsing="false" onAction="#Start" prefHeight="57.0" prefWidth="136.0" stylesheets="@css.css" text="Start">
+         <font>
+            <Font name="Comic Sans MS" size="31.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="playerTurn" layoutX="277.0" layoutY="85.0" prefHeight="28.0" prefWidth="150.0" promptText="Player" style="-fx-background-color: transparent;">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Player" />
+               <String fx:value="Computer" />
+            </FXCollections>
+         </items>
+      </ComboBox>
+      <Label layoutX="32.0" layoutY="81.0" text="Who plays first ?" textFill="#140000">
+         <font>
+            <Font name="Century Schoolbook Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="144.0" text="Choose Algorithm" textFill="#140000">
+         <font>
+            <Font name="Century Schoolbook Bold" size="22.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="strategy" layoutX="277.0" layoutY="146.0" prefHeight="25.0" prefWidth="183.0" promptText=" with alpha-beta pruning" style="-fx-background-color: transparent;">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="with alpha-beta pruning" />
+               <String fx:value="without alpha-beta pruning" />
+            </FXCollections>
+         </items>
+      </ComboBox>
+      <Label layoutX="32.0" layoutY="202.0" prefHeight="28.0" prefWidth="168.0" text="Enter level " textFill="#140000">
+         <font>
+            <Font name="Century Schoolbook Bold" size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="input" layoutX="277.0" layoutY="203.0" prefHeight="25.0" prefWidth="53.0" style="-fx-border-color: black; -fx-background-color: transparent;">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </TextField>
+
+</AnchorPane>

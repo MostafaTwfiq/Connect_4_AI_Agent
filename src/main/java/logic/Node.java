@@ -9,6 +9,11 @@ public class Node {
         this.score = score;
     }
 
+    public Node() {
+        this.state = state;
+        this.score=score;
+    }
+
     public long getState() {
         return state;
     }
