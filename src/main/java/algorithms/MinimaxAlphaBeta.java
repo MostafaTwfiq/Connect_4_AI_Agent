@@ -23,8 +23,8 @@ public class MinimaxAlphaBeta {
             var value = minimize(state, alpha, beta, depth+1);
             var utility = value.getValue();
             if (utility > maxUtility){
-                maxChild = value.getKey();
-                maxUtility = value.getValue();
+                maxChild = c;
+                maxUtility = utility;
             }
             if (maxUtility >= beta)
                 break;
@@ -47,8 +47,8 @@ public class MinimaxAlphaBeta {
             var value = maximize(state, alpha, beta, depth+1);
             var utility = value.getValue();
             if (utility < minUtility){
-                minChild = value.getKey();
-                minUtility = value.getValue();
+                minChild = c;
+                minUtility = utility;
             }
             if (minUtility <= alpha)
                 break;
