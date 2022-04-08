@@ -54,6 +54,7 @@ public class MiniMax {
     }
 
     public Node min(long state, int depth) {
+        root.setState(state);
         if (depth == maxDepth) {
             return new Node(state, Heuristic.getStateScore(state));
         }
@@ -65,6 +66,7 @@ public class MiniMax {
 
         for (long neighbour : neighbours) {
             node = max(neighbour, depth + 1);
+            root.addChild(node);
             //System.out.println("min: " + node.getScore());
             //StateOperations.printState(node.getState());
             if (node.getScore() < minNode.getScore()) {
@@ -73,6 +75,8 @@ public class MiniMax {
             }
 
         }
+
+        root.setScore(minNode.getScore());
         return minNode;
     }
 
