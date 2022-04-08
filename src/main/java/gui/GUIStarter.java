@@ -105,9 +105,9 @@ public class GUIStarter {
         state = worstConnection();
 
         List<SlotIndex> slots = StateOperations.getUserSlots(state);
-        System.out.println(Heuristic.calculatePlayerActualScore(state, SlotState.AGENT));
-        System.out.println(Heuristic.calculatePlayerCentering(slots));
-        System.out.println(Heuristic.calculatePlayerElementsConnection(slots));
+//        System.out.println(Heuristic.calculatePlayerActualScore(state, SlotState.AGENT));
+//        System.out.println(Heuristic.calculatePlayerCentering(slots));
+//        System.out.println(Heuristic.calculatePlayerElementsConnection(slots));
 
         StateOperations.printState(state);
         //Main.main(args);
