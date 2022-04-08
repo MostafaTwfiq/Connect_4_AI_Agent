@@ -5,9 +5,12 @@ import logic.Heuristic;
 import logic.SlotState;
 import logic.StateOperations;
 
+import java.util.HashMap;
+
 public class MinimaxAlphaBeta {
 
     static int maxDepth = 14;
+    HashMap<Long, Pair<Long, Double>> hashTree = new HashMap<>();
     public static Pair<Long, Double> decision(long state){
         var value = maximize(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
         return value;
