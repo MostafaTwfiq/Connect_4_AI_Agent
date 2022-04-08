@@ -1,5 +1,6 @@
 package gui;
 import algorithms.MiniMax;
+import algorithms.MinimaxAlphaBeta;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,6 +20,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        var v = MinimaxAlphaBeta.decision(-4496562564508441720l);
+        System.out.println(v);
+//        launch();
 
         var minmax = new MiniMax(10);
 
@@ -26,5 +30,6 @@ public class Main extends Application {
         System.out.println("Final state:-");
         System.out.println(node.getScore());
         StateOperations.printState(node.getState());
+
     }
 }
