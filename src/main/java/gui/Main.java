@@ -27,7 +27,7 @@ public class Main extends Application {
         var v = MinimaxAlphaBeta.decision(state);
         StateOperations.printState(v.getKey());
         System.out.println(v.getValue());
-        System.exit(0);
+//        System.exit(0);
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         double runningTime = elapsedTime / 1000.0;
