@@ -1,6 +1,6 @@
 package logic;
 
-public class Node {
+public class Node<P> {
     long state;
     float score;
 
