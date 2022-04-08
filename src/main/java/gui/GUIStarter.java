@@ -104,10 +104,10 @@ public class GUIStarter {
         state = drawState();
         //state = 120;
 
-        List<SlotIndex> slots = StateOperations.getUserSlots(state);
-        System.out.println(Heuristic.getStateScore(state));
+        //List<SlotIndex> slots = StateOperations.getUserSlots(state);
+        //System.out.println(Heuristic.getStateScore(state));
 
-        StateOperations.printState(state);
-        //Main.main(args);
+        //StateOperations.printState(state);
+        Main.main(args);
     }
 }

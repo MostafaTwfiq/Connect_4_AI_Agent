@@ -11,16 +11,16 @@ public class Heuristic {
         return (score - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
-    public static byte getStateScore(long state) {
+    public static float getStateScore(long state) {
         // assuming max score for centring is 58
         // assuming max score for connection is 810
         // assuming max actual score is 18
         // assuming max total score = 69 + 35 + 19 = 123
         // scale from 0 to 100
 
-        double centeringRatio = 0.25;
-        double connectionRatio = 0.25;
-        double actualScoreRatio = 0.5;
+        double centeringRatio = 1;
+        double connectionRatio = 0;
+        double actualScoreRatio = 0;
         double boardFullRatio = (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
         if (boardFullRatio > 0.5) {
             centeringRatio = boardFullRatio / 2;
@@ -44,8 +44,8 @@ public class Heuristic {
         userActualScore = actualScoreRatio * map(userActualScore, 0, 18, 0, 100);
 
         double stateScore = (agentActualScore + agentCenteringScore + agentConnectionScore) - (userActualScore + userCenteringScore + userConnectionScore);
-        stateScore = stateScore < 0 ? Math.floor(stateScore) : Math.ceil(stateScore);
-        return (byte) stateScore;
+        //stateScore = stateScore < 0 ? Math.floor(stateScore) : Math.ceil(stateScore);
+        return (float) stateScore;
     }
 
     /**

@@ -99,7 +99,7 @@ public class StateOperations {
             for (int col = 0; col < COL_SIZE; col++) {
                 SlotState slotState = getSlotState(state, row, col);
                 if (slotState == SlotState.EMPTY) {
-                    System.out.print(" \t");
+                    System.out.print("#\t");
                 } else if (slotState == SlotState.AGENT) {
                     System.out.print("X\t");
                 } else if (slotState == SlotState.USER) {

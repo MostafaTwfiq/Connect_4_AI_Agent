@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logic.StateOperations;
 
 import java.io.IOException;
 
@@ -19,11 +20,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        var minmax = new MiniMax(5);
+        var minmax = new MiniMax(10);
 
         var node = minmax.max(0, 0);
-
-        System.out.println(node.getState());
+        System.out.println("Final state:-");
         System.out.println(node.getScore());
+        StateOperations.printState(node.getState());
     }
 }
