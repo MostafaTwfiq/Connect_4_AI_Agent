@@ -2,6 +2,7 @@ package algorithms;
 
 
 import logic.Heuristic;
+import logic.Node;
 import logic.SlotState;
 import logic.StateOperations;
 
@@ -9,31 +10,7 @@ import java.util.List;
 
 public class MiniMax {
 
-    public class Node {
-        long state;
-        int score;
-
-        public Node(long state, int score) {
-            this.state = state;
-            this.score = score;
-        }
-
-        public long getState() {
-            return state;
-        }
-
-        public void setState(long state) {
-            this.state = state;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public void setScore(int score) {
-            this.score = score;
-        }
-    }
+    private Node node;
 
     private int maxDepth;
 
@@ -44,48 +21,59 @@ public class MiniMax {
     public Node max(long state, int depth) {
 
         if(depth == maxDepth) {
+            System.out.println("SCORE max: " + Heuristic.getStateScore(state));
             return new Node(state, Heuristic.getStateScore(state));
         }
 
-        Node maxNode = new Node(state, Integer.MIN_VALUE);
+        Node maxNode = new Node(state, Byte.MIN_VALUE);
         List<Long> neighbours = StateOperations.getStateChildren(state, SlotState.AGENT);
 
         Node node;
 
         for(long neighbour: neighbours) {
             node = min(neighbour, depth+1);
-
-            if(node.score > maxNode.score) {
-                maxNode.state = neighbour;
-                maxNode.score = node.score;
+            System.out.println(node.getScore());
+            if(node.getScore() > maxNode.getScore()) {
+                System.out.println("hey");
+                maxNode.setState(neighbour);
+                maxNode.setScore(node.getScore());
             }
 
         }
+//        System.out.println("depth: " + depth);
 
+        if(depth ==  0) {
+            System.out.println("max: " + maxNode.getState());
+            System.out.println("max: " + maxNode.getScore());
+        }
         return maxNode;
     }
 
     public Node min(long state, int depth) {
-
         if(depth == maxDepth) {
+            System.out.println("SCORE min: " + Heuristic.getStateScore(state));
             return new Node(state, Heuristic.getStateScore(state));
         }
 
-        Node minNode = new Node(state, Integer.MIN_VALUE);
-        List<Long> neighbours = StateOperations.getStateChildren(state, SlotState.AGENT);
+        Node minNode = new Node(state, Byte.MAX_VALUE);
+        List<Long> neighbours = StateOperations.getStateChildren(state, SlotState.USER);
 
         Node node;
 
         for(long neighbour: neighbours) {
             node = max(neighbour, depth+1);
 
-            if(node.score < minNode.score) {
-                minNode.state = neighbour;
-                minNode.score = node.score;
+            if(node.getScore() < minNode.getScore()) {
+
+                minNode.setState(neighbour);
+                minNode.setScore(node.getScore());
             }
 
         }
 
+//        System.out.println("depth: " + depth);
+//        System.out.println("min: " + minNode.getState());
+//        System.out.println("min: " + minNode.getScore());
         return minNode;
     }
 

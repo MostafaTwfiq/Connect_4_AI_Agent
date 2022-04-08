@@ -19,7 +19,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        var minmax = new MiniMax(15);
+        var minmax = new MiniMax(5);
 
         var node = minmax.max(0, 0);
 
