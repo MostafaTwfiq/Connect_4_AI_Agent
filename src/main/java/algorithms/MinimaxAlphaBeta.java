@@ -1,5 +1,5 @@
-package algorithms;
-/*
+/*package algorithms;
+
 import javafx.util.Pair;
 import logic.StateOperations;
 
@@ -26,7 +26,7 @@ public class MinimaxAlphaBeta {
             if (maxUtility >= beta)
                 break;
             if (maxUtility > alpha)
-                alpha = maxUtility;
+                alpha = maxUtility
         }
 
         return new Pair<Long, Double>(maxChild, maxUtility);

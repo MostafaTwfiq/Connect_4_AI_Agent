@@ -62,11 +62,23 @@ public class Heuristic {
             slot1 = slots.get(i);
             for (int j = i + 1; j < slots.size(); j++) {
                 slot2 = slots.get(j);
-                score += Math.floor(Point2D.distance(slot1.getRow(), slot1.getCol(), slot2.getRow(), slot2.getCol()));
+                score += Math.floor(calculateDistanceBetweenPoints(slot1.getRow(), slot1.getCol(), slot2.getRow(), slot2.getCol()));
+
             }
         }
 
         return score;
+    }
+
+    public static double calculateDistanceBetweenPoints(
+            double x1,
+            double y1,
+            double x2,
+            double y2) {
+//        System.out.println(x1 + "-" + y1);
+//        System.out.println(x2 + "-" + y2);
+//        System.out.println("result: " + Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)));
+        return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     }
 
     /** This function will calculate a score that will represent if the player elements is centered or not.
@@ -80,7 +92,7 @@ public class Heuristic {
         int centerRow = StateOperations.getRowSize() / 2;
         int centerCol = StateOperations.getColSize() / 2;
         for (int i = 0; i < slots.size(); i++) {
-            score += Math.floor(Point2D.distance(slots.get(i).getRow(), slots.get(i).getCol(), centerRow, centerCol));
+            score += Math.floor(calculateDistanceBetweenPoints(slots.get(i).getRow(), slots.get(i).getCol(), centerRow, centerCol));
         }
 
         return score;
