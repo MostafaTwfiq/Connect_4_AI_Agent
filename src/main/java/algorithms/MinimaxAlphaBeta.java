@@ -9,10 +9,11 @@ import java.util.HashMap;
 
 public class MinimaxAlphaBeta {
 
-    static int maxDepth = 14;
-    HashMap<Long, Pair<Long, Double>> hashTree = new HashMap<>();
+    static int maxDepth = 2;
+    static HashMap<Long, Pair<Long, Double>> hashTree = new HashMap<>();
     public static Pair<Long, Double> decision(long state){
         var value = maximize(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
+        hashTree.put(state, new Pair<>(null, value.getValue()));
         return value;
     }
 
@@ -26,6 +27,7 @@ public class MinimaxAlphaBeta {
         for (var c : StateOperations.getStateChildren(state, SlotState.AGENT)) {
             var value = minimize(c, alpha, beta, depth+1);
             var utility = value.getValue();
+            hashTree.put(c, new Pair<>(state,value.getValue()));
             if (utility > maxUtility){
                 maxChild = c;
                 maxUtility = utility;
@@ -50,6 +52,7 @@ public class MinimaxAlphaBeta {
         for (var c : StateOperations.getStateChildren(state, SlotState.USER)) {
             var value = maximize(c, alpha, beta, depth+1);
             var utility = value.getValue();
+            hashTree.put(c, new Pair<>(state,value.getValue()));
             if (utility < minUtility){
                 minChild = c;
                 minUtility = utility;
