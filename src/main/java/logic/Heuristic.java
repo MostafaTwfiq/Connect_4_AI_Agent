@@ -21,7 +21,7 @@ public class Heuristic {
         double centeringRatio = 0.25;
         double connectionRatio = 0.25;
         double actualScoreRatio = 0.5;
-        double boardFullRatio = StateOperations.getEmptySlotsCount(state) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
+        double boardFullRatio = (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
         if (boardFullRatio > 0.5) {
             centeringRatio = boardFullRatio / 2;
             connectionRatio = boardFullRatio / 2;
@@ -43,7 +43,9 @@ public class Heuristic {
         agentActualScore = actualScoreRatio * map(agentActualScore, 0, 18, 0, 100);
         userActualScore = actualScoreRatio * map(userActualScore, 0, 18, 0, 100);
 
-        return (byte) ((agentActualScore + agentCenteringScore + agentConnectionScore) - (userActualScore + userCenteringScore + userConnectionScore));
+        double stateScore = (agentActualScore + agentCenteringScore + agentConnectionScore) - (userActualScore + userCenteringScore + userConnectionScore);
+        stateScore = stateScore < 0 ? Math.floor(stateScore) : Math.ceil(stateScore);
+        return (byte) stateScore;
     }
 
     /**
