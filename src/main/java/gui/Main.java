@@ -1,4 +1,5 @@
 package gui;
+import algorithms.MinimaxAlphaBeta;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,6 +18,8 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        var v = MinimaxAlphaBeta.decision(-4496562564508441720l);
+        System.out.println(v);
+//        launch();
     }
 }

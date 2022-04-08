@@ -51,7 +51,7 @@ public class StateOperations {
         return count;
     }
 
-    public List<Long> getStateChildren(long state, SlotState slotState) {
+    public static List<Long> getStateChildren(long state, SlotState slotState) {
         if (slotState == SlotState.EMPTY)
             throw new IllegalArgumentException();
 
