@@ -22,7 +22,7 @@ public class MinimaxAlphaBeta {
         }
     }
 
-    static int maxDepth = 2;
+    static int maxDepth = 14;
     static TreeNode root = null;
     public static Pair<Long, Double> decision(long state){
         root = new TreeNode(state, 0);
