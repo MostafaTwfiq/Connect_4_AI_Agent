@@ -11,18 +11,7 @@ import java.util.Vector;
 
 public class MinimaxAlphaBeta {
 
-    private static class TreeNode{
-        long state;
-        double val;
-        Vector<TreeNode> children = new Vector<>();
-
-        TreeNode(long state, double val){
-            this.state= state;
-            this.val = val;
-        }
-    }
-
-    static int maxDepth = 14;
+    static int maxDepth = 2;
     static TreeNode root = null;
     public static Pair<Long, Double> decision(long state){
         root = new TreeNode(state, 0);
@@ -31,7 +20,7 @@ public class MinimaxAlphaBeta {
         return value;
     }
 
-    private static Pair<Long, Double> maximize(long state, TreeNode node,double alpha, double beta, int depth) {
+    private static Pair<Long, Double> maximize(long state, TreeNode node, double alpha, double beta, int depth) {
         if (StateOperations.getEmptySlotsCount(state) == 0 || depth >= maxDepth )
             return new Pair<Long, Double>(null , (double) Heuristic.getStateScore(state));
 

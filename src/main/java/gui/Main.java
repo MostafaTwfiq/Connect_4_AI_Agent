@@ -33,6 +33,21 @@ public class Main extends Application {
         double runningTime = elapsedTime / 1000.0;
         System.out.println("Time: " + runningTime);
         System.out.println(v);
+
+        startTime = System.currentTimeMillis();
+        state = -4496562564508441720l;
+        StateOperations.printState(state);
+        System.out.println();
+        v = MiniMax.decision(state);
+        StateOperations.printState(v.getKey());
+        System.out.println(v.getValue());
+//        System.exit(0);
+        stopTime = System.currentTimeMillis();
+        elapsedTime = stopTime - startTime;
+        runningTime = elapsedTime / 1000.0;
+        System.out.println("Time: " + runningTime);
+        System.out.println(v);
+
 //        launch();
 
         /*var minmax = new MiniMax(10);
