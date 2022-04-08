@@ -1,9 +1,11 @@
 package gui;
 import algorithms.MiniMax;
+import algorithms.MinimaxAlphaBeta;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logic.StateOperations;
 
 import java.io.IOException;
 
@@ -18,12 +20,28 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+        long state = -4496562564508441720l;
+        StateOperations.printState(state);
+        System.out.println();
+        var v = MinimaxAlphaBeta.decision(state);
+        StateOperations.printState(v.getKey());
+        System.out.println(v.getValue());
+        System.exit(0);
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        double runningTime = elapsedTime / 1000.0;
+        System.out.println("Time: " + runningTime);
+        System.out.println(v);
+//        launch();
 
-        var minmax = new MiniMax(5);
+        /*var minmax = new MiniMax(10);
 
         var node = minmax.max(0, 0);
-
-        System.out.println(node.getState());
+        System.out.println("Final state:-");
         System.out.println(node.getScore());
+        StateOperations.printState(node.getState());*/
+        //MinimaxAlphaBeta.decision(0);
+
     }
 }

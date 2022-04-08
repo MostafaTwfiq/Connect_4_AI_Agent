@@ -101,15 +101,13 @@ public class GUIStarter {
         state = StateOperations.playAtCol(state, 6, SlotState.USER);
         state = StateOperations.playAtCol(state, 6, SlotState.USER);*/
 
-        //state = drawState();
-        state = worstConnection();
+        state = drawState();
+        //state = 120;
 
-        List<SlotIndex> slots = StateOperations.getUserSlots(state);
-//        System.out.println(Heuristic.calculatePlayerActualScore(state, SlotState.AGENT));
-//        System.out.println(Heuristic.calculatePlayerCentering(slots));
-//        System.out.println(Heuristic.calculatePlayerElementsConnection(slots));
+        //List<SlotIndex> slots = StateOperations.getUserSlots(state);
+        //System.out.println(Heuristic.getStateScore(state));
 
-        StateOperations.printState(state);
-        //Main.main(args);
+        //StateOperations.printState(state);
+        Main.main(args);
     }
 }

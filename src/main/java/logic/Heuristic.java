@@ -1,177 +1,225 @@
 package logic;
 
+import com.sun.javafx.geom.Point2D;
+
+import java.util.List;
+
 public class Heuristic {
 
-    private static final  int SCORE_4 = 15 ;
-    private static final int SCORE_3 = 5;
-    private static final int SCORE_2 = 2 ;
-    private static final int SCORE_1 = 1 ;
-    private static final int  max_slots=4;
-    private static int agent_score=0;
-    private static int user_score=0;
-
-    public static int getAgent_score(long board) {
-        scores(board);
-        return agent_score;
+    //(x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    private static double map(double score, double inMin, double inMax, double outMin, double outMax) {
+        return (score - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
-    public static int getUser_score(long board) {
-        scores(board);
-        return user_score;
-    }
+    public static float getStateScore(long state) {
+        // assuming max score for centring is 58
+        // assuming max score for connection is 810
+        // assuming max actual score is 18
+        // assuming max total score = 69 + 35 + 19 = 123
+        // scale from 0 to 100
 
-    public static byte  score_evaluate (long board){
-        int score_sum=0;
-
-        // horizontal group
-        for(int i=0 ; i<StateOperations.getRowSize() ; i++)
-            for(int j=0 ; j<StateOperations.getColSize()-3 ; j++)
-                score_sum+=horizontal_score(board,i,j);
-
-        // vertical group
-        for(int i=0 ; i<StateOperations.getColSize() ; i++)
-            for(int j=0 ; j<StateOperations.getRowSize()-3 ; j++)
-                score_sum+=vertical_score(board,i,j);
-
-        // diagonal group
-        for(int i=0; i<StateOperations.getRowSize()-3 ; i++){
-            for(int j=0 ; j<StateOperations.getColSize()-3 ; j++){
-                score_sum+=Diagonal_raising(board , i , j);
-                score_sum+=Diagonal_falling(board , i , j+max_slots-1);
-            }
+        double centeringRatio = 0.25;
+        double connectionRatio = 0.25;
+        double actualScoreRatio = 0.5;
+        double boardFullRatio = (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
+        if (boardFullRatio > 0.5) {
+            centeringRatio = boardFullRatio / 2;
+            connectionRatio = boardFullRatio / 2;
+            actualScoreRatio = boardFullRatio;
         }
-        return  (byte) score_sum;
+        List<SlotIndex> agentSlots = StateOperations.getAgentSlots(state);
+        List<SlotIndex> userSlots = StateOperations.getUserSlots(state);
+
+        double agentConnectionScore = 810 - calculatePlayerElementsConnection(agentSlots);
+        double userConnectionScore = 810 - calculatePlayerElementsConnection(userSlots);
+        double agentCenteringScore = 58 - calculatePlayerCentering(agentSlots);
+        double userCenteringScore = 58 - calculatePlayerCentering(userSlots);
+        double agentActualScore = calculatePlayerActualScore(state, SlotState.AGENT);
+        double userActualScore = calculatePlayerActualScore(state, SlotState.USER);
+        agentConnectionScore = connectionRatio * map(agentConnectionScore, 0, 810, 0, 100);
+        userConnectionScore = connectionRatio * map(userConnectionScore, 0, 810, 0, 100);
+        agentCenteringScore = centeringRatio * map(agentCenteringScore, 0, 58, 0, 100);
+        userCenteringScore = centeringRatio * map(userCenteringScore, 0, 58, 0, 100);
+        agentActualScore = actualScoreRatio * map(agentActualScore, 0, 18, 0, 100);
+        userActualScore = actualScoreRatio * map(userActualScore, 0, 18, 0, 100);
+
+        double stateScore = (agentActualScore + agentCenteringScore + agentConnectionScore) - (userActualScore + userCenteringScore + userConnectionScore);
+        //stateScore = stateScore < 0 ? Math.floor(stateScore) : Math.ceil(stateScore);
+        return (float) stateScore;
     }
 
-    private static int horizontal_score(long board , int R, int C){
-        int agent_slots=0;
-        int user_slots=0;
-        int empty_slots=0;
-        for(int i=C;i<C+max_slots;i++){
-            if(StateOperations.getSlotState(board,R,i)==SlotState.AGENT)
-                agent_slots++;
-            else if(StateOperations.getSlotState(board,R,i)==SlotState.AGENT)
-                user_slots++;
-            else empty_slots++;
-        }
-        return  calculate_score(agent_slots,user_slots,empty_slots);
+    /**
+     * This function will calculate a score that will represent if the player elements is stacked or not.
+     * Note: If the score was smaller that will mean the elements are more stacked.
+     * @param slots The player slots indexes
+     * @return It will return the score of the current player state
+     */
 
-    }
+    public static int calculatePlayerElementsConnection(List<SlotIndex> slots) {
+        int score = 0;
+        SlotIndex slot1, slot2;
+        for (int i = 0; i < slots.size(); i++) {
+            slot1 = slots.get(i);
+            for (int j = i + 1; j < slots.size(); j++) {
+                slot2 = slots.get(j);
+                score += Math.floor(calculateDistanceBetweenPoints(slot1.getRow(), slot1.getCol(), slot2.getRow(), slot2.getCol()));
 
-    private static int vertical_score(long board , int R, int C){
-        int agent_slots=0;
-        int user_slots=0;
-        int empty_slots=0;
-        for(int i=R ; i<R+max_slots ; i++){
-            if(StateOperations.getSlotState(board,i,C)==SlotState.AGENT)
-                agent_slots++;
-            else if(StateOperations.getSlotState(board,i,C)==SlotState.AGENT)
-                user_slots++;
-            else empty_slots++;
-        }
-        return  calculate_score(agent_slots,user_slots,empty_slots);
-
-    }
-
-    private static int Diagonal_raising(long board ,int R, int C){
-        int agent_slots=0;
-        int user_slots=0;
-        int empty_slots=0;
-
-        for(int i=R ; i<R+max_slots ; i++)
-        {
-            if(StateOperations.getSlotState(board,i,C)==SlotState.USER)
-                user_slots++;
-            else if(StateOperations.getSlotState(board,i,C)==SlotState.AGENT)
-                agent_slots++;
-            else empty_slots++;
-            C++;
-        }
-        return calculate_score(agent_slots,user_slots,empty_slots);
-    }
-
-    private static int Diagonal_falling(long board ,int R, int C){
-        int agent_slots=0;
-        int user_slots=0;
-        int empty_slots=0;
-
-        for(int i=R ; i<R+max_slots ; i++)
-        {
-            if(StateOperations.getSlotState(board,i,C)==SlotState.USER)
-                user_slots++;
-            else if(StateOperations.getSlotState(board,i,C)==SlotState.AGENT)
-                agent_slots++;
-            else empty_slots++;
-            C--;
-        }
-        return calculate_score(agent_slots,user_slots,empty_slots);
-    }
-
-
-    private static int calculate_score(int agent_slots,int user_slots,int empty_slots)
-    {
-        if(agent_slots==4)
-            return SCORE_4;
-        else if(agent_slots==3 && empty_slots==1)
-            return  SCORE_3;
-        else if(agent_slots==2 && empty_slots==2)
-            return SCORE_2;
-        else if(agent_slots==1 && empty_slots==3)
-            return  SCORE_1;
-        else if(user_slots==4)
-            return -1*SCORE_4;
-        else if(user_slots==3 && empty_slots==1)
-            return (SCORE_3*-2);
-        else if(user_slots==2 && empty_slots==2)
-            return -(SCORE_2/2);
-        else if(user_slots==1 && empty_slots==3)
-            return -1*SCORE_1;
-        else return 0;
-    }
-
-
-    public static void scores(long board){
-
-        agent_score=0;
-        user_score=0;
-        for(int i=0 ; i<StateOperations.getRowSize() ; i++){
-            for(int j=0 ; j<StateOperations.getColSize()-3 ; j++){
-                if((StateOperations.getSlotState(board,i,j)==SlotState.AGENT) && (StateOperations.getSlotState(board,i,j+1)==SlotState.AGENT) && (StateOperations.getSlotState(board, i,j+2)==SlotState.AGENT) && (StateOperations.getSlotState(board,i,j+3)==SlotState.AGENT))
-                    agent_score++;
-                else if((StateOperations.getSlotState(board,i,j)==SlotState.USER) && (StateOperations.getSlotState(board,i,j+1)==SlotState.USER) && (StateOperations.getSlotState(board,i,j+2)==SlotState.USER) && (StateOperations.getSlotState(board,i,j+3)==SlotState.USER))
-                    user_score++;
             }
         }
 
-
-        for(int i=0 ; i<StateOperations.getColSize() ; i++) {
-            for(int j=0 ; j<StateOperations.getRowSize()-3 ; j++){
-                if((StateOperations.getSlotState(board,j,i)==SlotState.AGENT) && (StateOperations.getSlotState(board,j+1,i)==SlotState.AGENT) && (StateOperations.getSlotState(board,j+2,i)==SlotState.AGENT) && (StateOperations.getSlotState(board,j+3,i)==SlotState.AGENT))
-                    agent_score++;
-                else if((StateOperations.getSlotState(board,j,i)==SlotState.USER) && (StateOperations.getSlotState(board,j+1,i)==SlotState.USER) && (StateOperations.getSlotState(board,j+2,i)==SlotState.USER) && (StateOperations.getSlotState(board,j+3,i)==SlotState.USER))
-                    user_score++;
-            }
-        }
-
-        for(int i=0; i<StateOperations.getRowSize()-3 ; i++){
-            for(int j=0 ; j<StateOperations.getColSize()-3 ; j++){
-                if((StateOperations.getSlotState(board,i,j)== SlotState.AGENT) && (StateOperations.getSlotState(board,i+1,j+1)==SlotState.AGENT) && (StateOperations.getSlotState(board,i+2,j+2)==SlotState.AGENT) && (StateOperations.getSlotState(board,i+3,j+3)==SlotState.AGENT))
-                    agent_score++;
-                else if((StateOperations.getSlotState(board,i,j)==SlotState.USER) && (StateOperations.getSlotState(board,i+1,j+1)==SlotState.USER) && (StateOperations.getSlotState(board,i+2,j+2)==SlotState.USER) && (StateOperations.getSlotState(board,i+3,j+3)==SlotState.USER))
-                    user_score++;
-
-            }
-        }
-        for(int i=0; i<StateOperations.getRowSize()-3 ; i++){
-            for(int j=max_slots-1 ; j<StateOperations.getColSize() ; j++){
-                if((StateOperations.getSlotState(board,i,j)==SlotState.AGENT) && (StateOperations.getSlotState(board,i+1,j-1)==SlotState.AGENT) && (StateOperations.getSlotState(board,i+2,j-2)==SlotState.AGENT) && (StateOperations.getSlotState(board,i+3,j-3)==SlotState.AGENT))
-                    agent_score++;
-                else if((StateOperations.getSlotState(board,i,j)==SlotState.USER) && (StateOperations.getSlotState(board,i+1,j-1)==SlotState.USER) && (StateOperations.getSlotState(board,i+2,j-2)==SlotState.USER) && (StateOperations.getSlotState(board,i+3,j-3)==SlotState.USER))
-                    user_score++;
-            }
-        }
-
+        return score;
     }
 
+    public static double calculateDistanceBetweenPoints(
+            double x1,
+            double y1,
+            double x2,
+            double y2) {
+//        System.out.println(x1 + "-" + y1);
+//        System.out.println(x2 + "-" + y2);
+//        System.out.println("result: " + Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)));
+        return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+    }
+
+    /** This function will calculate a score that will represent if the player elements is centered or not.
+     * Note: If the score was smaller that will mean the elements are more centered.
+     * @param slots The player slots indexes
+     * @return It will return the score of the current player state
+     */
+
+    public static int calculatePlayerCentering(List<SlotIndex> slots) {
+        int score = 0;
+        int centerRow = StateOperations.getRowSize() / 2;
+        int centerCol = StateOperations.getColSize() / 2;
+        for (int i = 0; i < slots.size(); i++) {
+            score += Math.floor(calculateDistanceBetweenPoints(slots.get(i).getRow(), slots.get(i).getCol(), centerRow, centerCol));
+        }
+
+        return score;
+    }
+
+    public static int calculatePlayerActualScore(long state, SlotState player) {
+        int score = calculateVerticalScore(state, player);
+        score += calculateHorizontalScore(state, player);
+        score += calculateDiagonalScore(state, player);
+        return score;
+    }
+
+    public static int calculateVerticalScore(long state, SlotState player) {
+        int score = 0;
+        for (int row = 0, count; row < StateOperations.getRowSize(); row++) {
+            count = 0;
+            for (int col = 0; col < StateOperations.getColSize(); col++) {
+                if (StateOperations.getSlotState(state, row, col) == player) {
+                    count++;
+                } else {
+                    score += count > 3 ? count - 3 : 0;
+                    count = 0;
+                }
+            }
+
+            if (count > 3)
+                score += count - 3;
+
+        }
+        return score;
+    }
+
+    public static int calculateHorizontalScore(long state, SlotState player) {
+        int score = 0;
+        for (int col = 0, count; col < StateOperations.getColSize(); col++) {
+            count = 0;
+            for (int row = 0; row < StateOperations.getRowSize(); row++) {
+                if (StateOperations.getSlotState(state, row, col) == player) {
+                    count++;
+                } else {
+                    score += count > 3 ? count - 3 : 0;
+                    count = 0;
+                }
+            }
+
+            if (count > 3)
+                score += count - 3;
+
+        }
+        return score;
+    }
+
+    public static int calculateDiagonalScore(long state, SlotState player) {
+        int score = 0,
+                rowMax = StateOperations.getRowSize(),
+                colMax = StateOperations.getColSize(),
+                currRow, currCol,
+                count = 0;
+
+        // bottom left to top right (upper diagonal)
+        for (int rowStart = 0; rowStart <= rowMax - 4; rowStart++) {
+            count = 0;
+            for (currRow = rowStart, currCol = 0; currRow < rowMax && currCol < colMax; currRow++, currCol++) {
+                if (StateOperations.getSlotState(state, currRow, currCol) == player) {
+                    count++;
+                } else {
+                    score += count > 3 ? count - 3 : 0;
+                    count = 0;
+                }
+            }
+
+            if (count > 3)
+                score += count - 3;
+
+        }
+
+        // bottom left to top right (lower diagonal)
+        for (int colStart = 1; colStart <= colMax - 4; colStart++) {
+            count = 0;
+            for (currRow = 0, currCol = colStart; currRow < rowMax && currCol < colMax; currRow++, currCol++ ) {
+                if (StateOperations.getSlotState(state, currRow, currCol) == player) {
+                    count++;
+                } else {
+                    score += count > 3 ? count - 3 : 0;
+                    count = 0;
+                }
+            }
+
+            if (count > 3)
+                score += count - 3;
+        }
+
+        //-----------------------------------------------------------------
+        // top left to bottom right (lower diagonal)
+        for (int rowStart = rowMax - 1; rowStart > 2; rowStart--) {
+            count = 0;
+            for (currRow = rowStart, currCol = 0; currRow >= 0 && currCol < colMax; currRow--, currCol++) {
+                if (StateOperations.getSlotState(state, currRow, currCol) == player) {
+                    count++;
+                } else {
+                    score += count > 3 ? count - 3 : 0;
+                    count = 0;
+                }
+            }
+
+            if (count > 3)
+                score += count - 3;
+        }
+
+        // top left to bottom right (upper diagonal)
+        for (int colStart = 1; colStart <= colMax - 4; colStart++) {
+            count = 0;
+            for (currRow = rowMax - 1, currCol = colStart; currRow >= 0 && currCol < colMax; currRow--, currCol++) {
+                if (StateOperations.getSlotState(state, currRow, currCol) == player) {
+                    count++;
+                } else {
+                    score += count > 3 ? count - 3 : 0;
+                    count = 0;
+                }
+            }
+
+            if (count > 3)
+                score += count - 3;
+        }
+
+
+        return score;
+    }
 
 }

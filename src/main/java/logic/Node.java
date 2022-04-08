@@ -1,10 +1,10 @@
 package logic;
 
-public class Node {
+public class Node<P> {
     long state;
-    byte score;
+    float score;
 
-    public Node(long state, byte score) {
+    public Node(long state, float score) {
         this.state = state;
         this.score = score;
     }
@@ -17,11 +17,11 @@ public class Node {
         this.state = state;
     }
 
-    public byte getScore() {
+    public float getScore() {
         return score;
     }
 
-    public void setScore(byte score) {
+    public void setScore(float score) {
         this.score = score;
     }
 }
