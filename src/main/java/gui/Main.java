@@ -21,5 +21,6 @@ public class Main extends Application {
         var v = MinimaxAlphaBeta.decision(-4496562564508441720l);
         System.out.println(v);
 //        launch();
+
     }
 }
