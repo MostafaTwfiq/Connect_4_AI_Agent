@@ -47,7 +47,7 @@ public class Main extends Application {
         runningTime = elapsedTime / 1000.0;
         System.out.println("Time: " + runningTime);
         System.out.println(v);
-
+        System.exit(0);
 //        launch();
 
         /*var minmax = new MiniMax(10);

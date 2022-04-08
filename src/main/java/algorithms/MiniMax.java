@@ -10,7 +10,7 @@ public class MiniMax {
 
 
     public static TreeNode root;
-    private static int maxDepth = 2;
+    private static int maxDepth = 10;
 
     public static Pair<Long, Double> decision(long state){
         root = new TreeNode(state, 0);
@@ -34,7 +34,7 @@ public class MiniMax {
             var utility = value.getValue();
             nodec.val = utility;
            if (utility > maxUtility){
-               maxChild = value.getKey();
+               maxChild = neighbour;
                maxUtility = utility;
            }
 
