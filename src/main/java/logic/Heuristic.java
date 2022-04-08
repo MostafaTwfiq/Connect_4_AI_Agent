@@ -18,9 +18,9 @@ public class Heuristic {
         // assuming max total score = 69 + 35 + 19 = 123
         // scale from 0 to 100
 
-        double centeringRatio = 1;
-        double connectionRatio = 0;
-        double actualScoreRatio = 0;
+        double centeringRatio = 0.25;
+        double connectionRatio = 0.25;
+        double actualScoreRatio = 0.5;
         double boardFullRatio = (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
         if (boardFullRatio > 0.5) {
             centeringRatio = boardFullRatio / 2;
