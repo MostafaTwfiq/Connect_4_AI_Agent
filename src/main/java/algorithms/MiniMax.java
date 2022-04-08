@@ -10,15 +10,22 @@ import java.util.List;
 
 public class MiniMax {
 
+    private Node root;
     private Node node;
 
     private final int maxDepth;
+
+    public Node getTree() {
+        return root;
+    }
 
     public MiniMax(int maxDepth) {
         this.maxDepth = maxDepth;
     }
 
     public Node max(long state, int depth) {
+
+        root.setState(state);
 
         if (depth == maxDepth) {
             return new Node(state, Heuristic.getStateScore(state));
@@ -31,14 +38,17 @@ public class MiniMax {
 
         for (long neighbour : neighbours) {
             node = min(neighbour, depth + 1);
-            //System.out.println("max: " + node.getScore());
-            //StateOperations.printState(node.getState());
+
+            root.addChild(node);
+
             if (node.getScore() > maxNode.getScore()) {
                 maxNode.setState(neighbour);
                 maxNode.setScore(node.getScore());
             }
 
         }
+
+        root.setState(maxNode.getState());
 
         return maxNode;
     }
