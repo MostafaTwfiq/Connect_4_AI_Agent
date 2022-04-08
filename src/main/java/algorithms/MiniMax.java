@@ -1,83 +1,68 @@
 package algorithms;
 
 
+import javafx.util.Pair;
 import logic.Heuristic;
-import logic.Node;
 import logic.SlotState;
 import logic.StateOperations;
 
-import java.util.List;
-
 public class MiniMax {
 
-    private Node root;
-    private Node node;
 
-    private final int maxDepth;
+    public static TreeNode root;
+    private static int maxDepth = 2;
 
-    public Node getTree() {
-        return root;
+    public static Pair<Long, Double> decision(long state){
+        root = new TreeNode(state, 0);
+        var value = max(state, root, 0);
+        root.val = value.getValue();
+        return value;
     }
 
-    public MiniMax(int maxDepth) {
-        this.maxDepth = maxDepth;
-    }
+    private static Pair<Long, Double> max(long state, TreeNode node, int depth) {
 
-    public Node max(long state, int depth) {
+        if (StateOperations.getEmptySlotsCount(state) == 0 || depth >= maxDepth)
+            return new Pair<Long, Double>(null , (double) Heuristic.getStateScore(state));
 
-        root.setState(state);
+        long maxChild = 0;
+        double maxUtility = Double.NEGATIVE_INFINITY;
 
-        if (depth == maxDepth) {
-            return new Node(state, Heuristic.getStateScore(state));
+        for (var neighbour : StateOperations.getStateChildren(state, SlotState.AGENT)) {
+            var nodec = new TreeNode(neighbour,0);
+            node.children.add(nodec);
+            var value = min(neighbour,nodec ,depth + 1);
+            var utility = value.getValue();
+            nodec.val = utility;
+           if (utility > maxUtility){
+               maxChild = value.getKey();
+               maxUtility = utility;
+           }
+
         }
 
-        Node maxNode = new Node(state, Float.NEGATIVE_INFINITY);
-        List<Long> neighbours = StateOperations.getStateChildren(state, SlotState.AGENT);
+        return new Pair<Long, Double>(maxChild, maxUtility);
+    }
 
-        Node node;
+    private static Pair<Long, Double> min(long state, TreeNode node, int depth) {
+        if (StateOperations.getEmptySlotsCount(state) == 0 || depth >= maxDepth)
+            return new Pair<Long, Double>(null , (double) Heuristic.getStateScore(state));
+        long minChild = 0;
+        double minUtility = Double.POSITIVE_INFINITY;
 
-        for (long neighbour : neighbours) {
-            node = min(neighbour, depth + 1);
-
-            root.addChild(node);
-
-            if (node.getScore() > maxNode.getScore()) {
-                maxNode.setState(neighbour);
-                maxNode.setScore(node.getScore());
+        for (long neighbour : StateOperations.getStateChildren(state, SlotState.USER)) {
+            var nodec = new TreeNode(neighbour,0);
+            node.children.add(nodec);
+            var value = max(neighbour, nodec,  depth+1);
+            var utility = value.getValue();
+            nodec.val = utility;
+            node.children.add(nodec);
+            if (utility < minUtility){
+                minChild = neighbour;
+                minUtility = utility;
             }
 
         }
-
-        root.setState(maxNode.getState());
-
-        return maxNode;
-    }
-
-    public Node min(long state, int depth) {
-        root.setState(state);
-        if (depth == maxDepth) {
-            return new Node(state, Heuristic.getStateScore(state));
-        }
-
-        Node minNode = new Node(state, Float.POSITIVE_INFINITY);
-        List<Long> neighbours = StateOperations.getStateChildren(state, SlotState.USER);
-
-        Node node;
-
-        for (long neighbour : neighbours) {
-            node = max(neighbour, depth + 1);
-            root.addChild(node);
-            //System.out.println("min: " + node.getScore());
-            //StateOperations.printState(node.getState());
-            if (node.getScore() < minNode.getScore()) {
-                minNode.setState(neighbour);
-                minNode.setScore(node.getScore());
-            }
-
-        }
-
-        root.setScore(minNode.getScore());
-        return minNode;
+        return new Pair<Long, Double>(minChild, minUtility);
     }
 
 
