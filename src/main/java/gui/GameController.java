@@ -128,7 +128,7 @@ public class GameController implements Initializable {
             view.setFill(Color.RED);
             Pane pane = new Pane(new Node[]{view});
             pane.setPrefSize(2.0D, 2.0D);
-            Scale scale = new Scale(1.0D, 1.0D);
+            Scale scale = new Scale(3.0D, 3.0D);
             view.getTransforms().add(scale);
             scale.xProperty().bind(pane.widthProperty().divide(50));
             scale.yProperty().bind(pane.heightProperty().divide(50));
@@ -183,6 +183,8 @@ public class GameController implements Initializable {
                 cellQueue.add(cCell);
                 model.addCell(cCell);
                 model.addEdge(edgePC);
+                if (ind == 0)
+                    v += c.getChildren().size();
             }
             ind++;
             if(ind == v+1)
