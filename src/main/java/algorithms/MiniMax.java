@@ -12,11 +12,12 @@ public class MiniMax {
     public static TreeNode root;
     private static int maxDepth = 7;
 
-    public static Pair<Long, Double> decision(long state){
-        root = new TreeNode(state, 0);
+    public static Pair<Long, TreeNode> decision(long state){
+        root = new TreeNode(state, 0, true);
         var value = max(state, root, 0);
         root.val = value.getValue();
-        return value;
+        Pair<Long, TreeNode> val = new Pair<>(value.getKey(), root);
+        return val;
     }
 
     private static Pair<Long, Double> max(long state, TreeNode node, int depth) {
@@ -28,7 +29,7 @@ public class MiniMax {
         double maxUtility = Double.NEGATIVE_INFINITY;
 
         for (var neighbour : StateOperations.getStateChildren(state, SlotState.AGENT)) {
-            var nodec = new TreeNode(neighbour,0);
+            var nodec = new TreeNode(neighbour,0, false);
             node.children.add(nodec);
             var value = min(neighbour,nodec ,depth + 1);
             var utility = value.getValue();
@@ -50,7 +51,7 @@ public class MiniMax {
         double minUtility = Double.POSITIVE_INFINITY;
 
         for (long neighbour : StateOperations.getStateChildren(state, SlotState.USER)) {
-            var nodec = new TreeNode(neighbour,0);
+            var nodec = new TreeNode(neighbour,0, true);
             node.children.add(nodec);
             var value = max(neighbour, nodec,  depth+1);
             var utility = value.getValue();

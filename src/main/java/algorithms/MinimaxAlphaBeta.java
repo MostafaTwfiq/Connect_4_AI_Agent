@@ -13,14 +13,12 @@ public class MinimaxAlphaBeta {
 
     static int maxDepth = 10;
     static TreeNode root = null;
-    public static Pair<Long, Double> decision(long state){
-        double boardFullRatio = Heuristic.getBoardFullRatio(state);
-        boardFullRatio = Math.max(boardFullRatio, 0.33);
-        maxDepth = (int) Math.floor(Heuristic.map(boardFullRatio, 0.33, 1, 10, 17));
-        root = new TreeNode(state, 0);
+    public static Pair<Long, TreeNode> decision(long state){
+        root = new TreeNode(state, 0, true);
         var value = maximize(state, root, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
         root.val = value.getValue();
-        return value;
+        Pair<Long, TreeNode> val = new Pair<>(value.getKey(), root);
+        return val;
     }
 
     private static Pair<Long, Double> maximize(long state, TreeNode node, double alpha, double beta, int depth) {
@@ -31,7 +29,7 @@ public class MinimaxAlphaBeta {
         double maxUtility = Double.NEGATIVE_INFINITY;
 
         for (var c : StateOperations.getStateChildren(state, SlotState.AGENT)) {
-            var nodec = new TreeNode(c,0);
+            var nodec = new TreeNode(c,0, false);
             node.children.add(nodec);
             var value = minimize(c, nodec, alpha, beta, depth+1);
             var utility = value.getValue();
@@ -58,7 +56,7 @@ public class MinimaxAlphaBeta {
         double minUtility = Double.POSITIVE_INFINITY;
 
         for (var c : StateOperations.getStateChildren(state, SlotState.USER)) {
-            var nodec = new TreeNode(c,0);
+            var nodec = new TreeNode(c,0, true);
             node.children.add(nodec);
             var value = maximize(c, nodec, alpha, beta, depth+1);
             var utility = value.getValue();
