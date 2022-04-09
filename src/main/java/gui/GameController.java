@@ -143,6 +143,7 @@ public class GameController implements Initializable {
         cellQueue.add(rootCell);
         model.addCell(rootCell);
         var ind = 0;
+        var v = root.getChildren().size();
         while (!nodeQueue.isEmpty()){
             var node = nodeQueue.remove();
             var cell = cellQueue.remove();
@@ -156,7 +157,7 @@ public class GameController implements Initializable {
                 model.addEdge(edgePC);
             }
             ind++;
-            if(ind == 2)
+            if(ind == v+1)
                 break;
         }
 //        final ICell cellA = new TriangleCell();
