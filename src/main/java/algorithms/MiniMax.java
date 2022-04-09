@@ -52,7 +52,6 @@ public class MiniMax {
 
         for (long neighbour : StateOperations.getStateChildren(state, SlotState.USER)) {
             var nodec = new TreeNode(neighbour,0, true);
-            node.children.add(nodec);
             var value = max(neighbour, nodec,  depth+1);
             var utility = value.getValue();
             nodec.val = utility;
