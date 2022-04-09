@@ -132,19 +132,19 @@ public class GameController implements Initializable {
             view.getTransforms().add(scale);
             scale.xProperty().bind(pane.widthProperty().divide(50));
             scale.yProperty().bind(pane.heightProperty().divide(50));
-            CellGestures.makeResizable(pane);
             return pane;
         }
     }
 
     public void drawGraph(Stage stage) throws Exception {
         Graph graph = new Graph();
-
         // Add content to graph
         populateGraph(graph);
 
         // Layout nodes
+
         AbegoTreeLayout layout = new AbegoTreeLayout(200, 50, Location.Bottom);
+
         graph.layout(layout);
 
         // Configure interaction buttons and behavior
@@ -161,7 +161,11 @@ public class GameController implements Initializable {
         graph.beginUpdate();
         Queue<TreeNode> nodeQueue = new LinkedList<>();
         Queue<ICell> cellQueue = new LinkedList<>();
+
         var rootCell = new MinMaxCell(true);
+
+        graph.getGraphic(rootCell).setMinSize(10,10);
+
         nodeQueue.add(this.root);
         cellQueue.add(rootCell);
         model.addCell(rootCell);
@@ -171,7 +175,8 @@ public class GameController implements Initializable {
             var node = nodeQueue.remove();
             var cell = cellQueue.remove();
             for (var c : node.getChildren()){
-                var cCell = new MinMaxCell(true);
+                var cCell = new MinMaxCell(c.isMaxNode());
+                graph.getGraphic(cCell).setMinSize(10,10);
                 Edge edgePC = new Edge(cell, cCell);
                 edgePC.textProperty().set(Double.toString(Math.round(c.getVal() * 100.0)/ 100.0));
                 nodeQueue.add(c);

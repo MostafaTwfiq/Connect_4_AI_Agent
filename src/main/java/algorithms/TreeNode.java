@@ -6,11 +6,13 @@ public class TreeNode {
 
     long state;
     double val;
+    boolean isMaxNode;
     Vector<TreeNode> children = new Vector<>();
 
-    TreeNode(long state, double val){
+    TreeNode(long state, double val, boolean isMaxNode){
         this.state= state;
         this.val = val;
+        this.isMaxNode = isMaxNode;
     }
     public Vector<TreeNode> getChildren(){
         return this.children;
@@ -34,5 +36,9 @@ public class TreeNode {
 
     public void setVal(double val) {
         this.val = val;
+    }
+
+    public boolean isMaxNode() {
+        return isMaxNode;
     }
 }
