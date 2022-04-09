@@ -56,7 +56,9 @@ public class StateOperations {
             throw new IllegalArgumentException();
 
         ArrayList<Long> children = new ArrayList<>();
-        for (int col = 0; col < COL_SIZE; col++) {
+        int[] userOrder = new int[]{0, 6, 1, 5, 2, 4, 3};
+        int[] agentOrder = new int[]{3, 2, 4, 1, 5, 0, 6};
+        for (int col : slotState == SlotState.AGENT ? agentOrder : userOrder) {
             if (numOfElementsAtCol(state, col) < ROW_SIZE) {
                 children.add(playAtCol(state, col, slotState));
             }
