@@ -22,7 +22,7 @@ public class StateOperations {
         return (int) ((state >>> 61 - ((ROW_SIZE + 3) * col + ROW_SIZE)) & 0b00000111);
     }
 
-    private static long setSlotValue(long state, int slotIndex, SlotState slotState){
+    public static long setSlotValue(long state, int slotIndex, SlotState slotState){
         state = clearSlot(state, slotIndex);
         return state | (((long) slotState.getValue()) << (63 - slotIndex));
     }
