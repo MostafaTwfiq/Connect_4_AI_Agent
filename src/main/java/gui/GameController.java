@@ -127,7 +127,7 @@ public class GameController implements Initializable {
             view.setStroke(Color.RED);
             view.setFill(Color.RED);
             Pane pane = new Pane(new Node[]{view});
-            pane.setPrefSize(50.0D, 50.0D);
+            pane.setPrefSize(2.0D, 2.0D);
             Scale scale = new Scale(1.0D, 1.0D);
             view.getTransforms().add(scale);
             scale.xProperty().bind(pane.widthProperty().divide(50));
