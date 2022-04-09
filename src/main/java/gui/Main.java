@@ -1,12 +1,10 @@
 package gui;
-import algorithms.MiniMax;
-import algorithms.MinimaxAlphaBeta;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import logic.StateOperations;
 
 import java.io.IOException;
 
