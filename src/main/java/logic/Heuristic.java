@@ -7,8 +7,12 @@ import java.util.List;
 public class Heuristic {
 
     //(x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    private static double map(double score, double inMin, double inMax, double outMin, double outMax) {
+    public static double map(double score, double inMin, double inMax, double outMin, double outMax) {
         return (score - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
+
+    public static double getBoardFullRatio(long state) {
+        return (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
     }
 
     public static float getStateScore(long state) {
@@ -21,7 +25,7 @@ public class Heuristic {
         double centeringRatio = 0.33;
         double connectionRatio = 0.33;
         double actualScoreRatio = 0.33;
-        double boardFullRatio = (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
+        double boardFullRatio = getBoardFullRatio(state);
         if (boardFullRatio > 0.33) {
             double newRatio = boardFullRatio * 1.3 > 1 ? 1 : boardFullRatio * 1.3;
             centeringRatio = (1 - newRatio) / 2;
