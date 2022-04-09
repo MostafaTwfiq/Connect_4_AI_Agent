@@ -121,7 +121,7 @@ public class GameController implements Initializable {
         populateGraph(graph);
 
         // Layout nodes
-        AbegoTreeLayout layout = new AbegoTreeLayout(250, 50, Location.Top);
+        AbegoTreeLayout layout = new AbegoTreeLayout(200, 50, Location.Top);
         graph.layout(layout);
 
         // Configure interaction buttons and behavior
