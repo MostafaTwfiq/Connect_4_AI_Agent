@@ -170,6 +170,8 @@ public class GameController implements Initializable {
         cellQueue.add(rootCell);
         model.addCell(rootCell);
         var ind = 0;
+        var prev = root;
+        var last = root;
         var v = root.getChildren().size();
         while (!nodeQueue.isEmpty()){
             var node = nodeQueue.remove();
@@ -183,11 +185,14 @@ public class GameController implements Initializable {
                 cellQueue.add(cCell);
                 model.addCell(cCell);
                 model.addEdge(edgePC);
-                if (ind == 0)
-                    v += c.getChildren().size();
+                last = c;
             }
-            ind++;
-            if(ind == v+1)
+            if(node == prev){
+                ind++;
+                prev = last;
+            }
+
+            if(ind == 4)
                 break;
         }
 

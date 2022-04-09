@@ -61,7 +61,6 @@ public class MinimaxAlphaBeta {
             var value = maximize(c, nodec, alpha, beta, depth+1);
             var utility = value.getValue();
             nodec.val = utility;
-            node.children.add(nodec);
             if (utility < minUtility){
                 minChild = c;
                 minUtility = utility;
