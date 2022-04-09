@@ -3,10 +3,8 @@ package gui;
 import algorithms.MiniMax;
 import algorithms.MinimaxAlphaBeta;
 import algorithms.TreeNode;
-import com.fxgraph.cells.RectangleCell;
+import com.fxgraph.cells.CellGestures;
 import com.fxgraph.cells.TriangleCell;
-import com.fxgraph.edges.CorneredEdge;
-import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.ICell;
@@ -15,17 +13,21 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.Heuristic;
@@ -35,11 +37,8 @@ import logic.StateOperations;
 import java.net.URL;
 import java.util.*;
 
-import com.fxgraph.edges.CorneredEdge.*;
 import com.fxgraph.layout.AbegoTreeLayout;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
 import org.abego.treelayout.Configuration.Location;
 
 public class GameController implements Initializable {
@@ -97,7 +96,7 @@ public class GameController implements Initializable {
 
         showTreeBtn.setOnAction(e -> {
             try {
-                start(new Stage());
+                drawGraph(new Stage());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -113,21 +112,45 @@ public class GameController implements Initializable {
         });
     }
 
+    private class MinMaxCell extends TriangleCell{
+        private boolean isMax;
+        private MinMaxCell(boolean isMax) {
+            super();
+            this.isMax = isMax;
+        }
 
-    public void start(Stage stage) throws Exception {
+        @Override
+        public Region getGraphic(Graph graph) {
+            double width = 50.0D;
+            double height = 50.0D;
+            Polygon view = isMax ? new Polygon(new double[]{25.0D, 0.0D, 50.0D, 50.0D, 0.0D, 50.0D}) : new Polygon(width / 2, height, width, 0, 0, 0);
+            view.setStroke(Color.RED);
+            view.setFill(Color.RED);
+            Pane pane = new Pane(new Node[]{view});
+            pane.setPrefSize(50.0D, 50.0D);
+            Scale scale = new Scale(1.0D, 1.0D);
+            view.getTransforms().add(scale);
+            scale.xProperty().bind(pane.widthProperty().divide(50));
+            scale.yProperty().bind(pane.heightProperty().divide(50));
+            CellGestures.makeResizable(pane);
+            return pane;
+        }
+    }
+
+    public void drawGraph(Stage stage) throws Exception {
         Graph graph = new Graph();
 
         // Add content to graph
         populateGraph(graph);
 
         // Layout nodes
-        AbegoTreeLayout layout = new AbegoTreeLayout(200, 50, Location.Top);
+        AbegoTreeLayout layout = new AbegoTreeLayout(200, 50, Location.Bottom);
         graph.layout(layout);
 
         // Configure interaction buttons and behavior
 
         // Display the graph
-        stage.setScene(new Scene(new BorderPane(graph.getCanvas())));
+        stage.setScene(new Scene(new ScrollPane(graph.getCanvas()), 700, 700));
         stage.show();
     }
 
@@ -138,7 +161,7 @@ public class GameController implements Initializable {
         graph.beginUpdate();
         Queue<TreeNode> nodeQueue = new LinkedList<>();
         Queue<ICell> cellQueue = new LinkedList<>();
-        var rootCell = new TriangleCell();
+        var rootCell = new MinMaxCell(true);
         nodeQueue.add(this.root);
         cellQueue.add(rootCell);
         model.addCell(rootCell);
@@ -148,7 +171,7 @@ public class GameController implements Initializable {
             var node = nodeQueue.remove();
             var cell = cellQueue.remove();
             for (var c : node.getChildren()){
-                var cCell = new TriangleCell();
+                var cCell = new MinMaxCell(true);
                 Edge edgePC = new Edge(cell, cCell);
                 edgePC.textProperty().set(Double.toString(Math.round(c.getVal() * 100.0)/ 100.0));
                 nodeQueue.add(c);
@@ -160,44 +183,10 @@ public class GameController implements Initializable {
             if(ind == v+1)
                 break;
         }
-//        final ICell cellA = new TriangleCell();
-//        final ICell cellB = new RectangleCell();
-//        final ICell cellC = new RectangleCell();
-//        final ICell cellD = new RectangleCell();
-//        final ICell cellE = new RectangleCell();
-//        final ICell cellF = new RectangleCell();
-//        final ICell cellG = new RectangleCell();
-//        model.addCell(cellA);
-//        model.addCell(cellB);
-//        model.addCell(cellC);
-//        model.addCell(cellD);
-//        model.addCell(cellE);
-//        model.addCell(cellF);
-//        model.addCell(cellG);
-//
-//        final Edge edgeAB = new Edge(cellA, cellB);
-//        edgeAB.textProperty().set("Directed Edge");
-//        model.addEdge(edgeAB);
-//
-//        final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, Orientation.HORIZONTAL);
-//        edgeAC.textProperty().set("Directed CorneredEdge");
-//        model.addEdge(edgeAC);
-//
-//        final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, Orientation.HORIZONTAL);
-//        edgeBE.textProperty().set("Directed DoubleCorneredEdge");
-//        model.addEdge(edgeBE);
-//
-//        final Edge edgeCF = new Edge(cellC, cellF);
-//        edgeCF.textProperty().set("Directed Edge");
-//        model.addEdge(edgeCF);
-//
-//
-//        model.addEdge(cellC, cellG);
-//
-//        model.addEdge(cellB, cellD);
 
         graph.endUpdate();
     }
+
     private List<Rectangle> createSelectColumns() {
         List<Rectangle> listR = new ArrayList<>();
 
