@@ -244,6 +244,8 @@ public class GameController implements Initializable {
 
     private void setGameBoard() {
         currState = 0;
+        agentScoreLbl.setText("0");
+        userScoreLbl.setText("0");
         gamePane.getChildren().clear();
         gamePane.getChildren().addAll(createGrid());
         gamePane.getChildren().addAll(createSelectColumns());
@@ -284,6 +286,8 @@ public class GameController implements Initializable {
     }
 
     private void agentTurn() {
+        if (StateOperations.getEmptySlotsCount(currState) == 0)
+            return;
         var value = algoWithAlphaBeta ? MinimaxAlphaBeta.decision(currState) : MiniMax.decision(currState);
         var newState = value.getKey();
         this.root = value.getValue();

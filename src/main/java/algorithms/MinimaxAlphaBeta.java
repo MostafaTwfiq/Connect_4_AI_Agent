@@ -16,6 +16,9 @@ public class MinimaxAlphaBeta {
     public static Pair<Long, TreeNode> decision(long state){
         root = new TreeNode(state, 0, true);
         var value = maximize(state, root, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
+        double boardFullRatio = Heuristic.getBoardFullRatio(state);
+        boardFullRatio = Math.max(boardFullRatio, 0.33);
+        maxDepth = (int) Math.floor(Heuristic.map(boardFullRatio, 0.33, 1, 10, 17));
         root.val = value.getValue();
         Pair<Long, TreeNode> val = new Pair<>(value.getKey(), root);
         return val;
