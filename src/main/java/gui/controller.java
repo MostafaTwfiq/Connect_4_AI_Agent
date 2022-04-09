@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleObjectProperty;
@@ -343,7 +343,7 @@ public class controller implements Initializable {
     public void home(ActionEvent event) {
         Main Scene = new Main();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/start.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/startScreen.fxml"));
             Scene.setScene(event, root, "Connect4");
         } catch (IOException e) {
             e.printStackTrace();
@@ -351,3 +351,4 @@ public class controller implements Initializable {
     }
 
 }
+*/

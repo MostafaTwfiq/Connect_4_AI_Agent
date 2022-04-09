@@ -18,22 +18,27 @@ public class Heuristic {
         // assuming max total score = 69 + 35 + 19 = 123
         // scale from 0 to 100
 
-        double centeringRatio = 0.25;
-        double connectionRatio = 0.25;
-        double actualScoreRatio = 0.5;
+        double centeringRatio = 0.33;
+        double connectionRatio = 0.33;
+        double actualScoreRatio = 0.33;
         double boardFullRatio = (StateOperations.getRowSize() * StateOperations.getColSize() - StateOperations.getEmptySlotsCount(state)) * 1.0 / (StateOperations.getRowSize() * StateOperations.getColSize());
-        if (boardFullRatio > 0.5) {
-            centeringRatio = boardFullRatio / 2;
-            connectionRatio = boardFullRatio / 2;
-            actualScoreRatio = boardFullRatio;
+        if (boardFullRatio > 0.33) {
+            double newRatio = boardFullRatio * 1.3 > 1 ? 1 : boardFullRatio * 1.3;
+            centeringRatio = (1 - newRatio) / 2;
+            connectionRatio = (1 - newRatio) / 2;
+            actualScoreRatio = newRatio;
         }
         List<SlotIndex> agentSlots = StateOperations.getAgentSlots(state);
         List<SlotIndex> userSlots = StateOperations.getUserSlots(state);
 
         double agentConnectionScore = 810 - calculatePlayerElementsConnection(agentSlots);
+        agentConnectionScore = agentConnectionScore < 0 ? 810 : agentConnectionScore;
         double userConnectionScore = 810 - calculatePlayerElementsConnection(userSlots);
+        userConnectionScore = userConnectionScore < 0 ? 810 : userConnectionScore;
         double agentCenteringScore = 58 - calculatePlayerCentering(agentSlots);
+        agentCenteringScore = agentCenteringScore < 0 ? 58 : agentCenteringScore;
         double userCenteringScore = 58 - calculatePlayerCentering(userSlots);
+        userCenteringScore = userCenteringScore < 0 ? 58 : userCenteringScore;
         double agentActualScore = calculatePlayerActualScore(state, SlotState.AGENT);
         double userActualScore = calculatePlayerActualScore(state, SlotState.USER);
         agentConnectionScore = connectionRatio * map(agentConnectionScore, 0, 810, 0, 100);
@@ -55,7 +60,7 @@ public class Heuristic {
      * @return It will return the score of the current player state
      */
 
-    public static int calculatePlayerElementsConnection(List<SlotIndex> slots) {
+    private static int calculatePlayerElementsConnection(List<SlotIndex> slots) {
         int score = 0;
         SlotIndex slot1, slot2;
         for (int i = 0; i < slots.size(); i++) {
@@ -70,7 +75,7 @@ public class Heuristic {
         return score;
     }
 
-    public static double calculateDistanceBetweenPoints(
+    private static double calculateDistanceBetweenPoints(
             double x1,
             double y1,
             double x2,
@@ -87,12 +92,13 @@ public class Heuristic {
      * @return It will return the score of the current player state
      */
 
-    public static int calculatePlayerCentering(List<SlotIndex> slots) {
+    private static int calculatePlayerCentering(List<SlotIndex> slots) {
         int score = 0;
-        int centerRow = StateOperations.getRowSize() / 2;
+        int centerRow = StateOperations.getRowSize() / 2 - 1;
         int centerCol = StateOperations.getColSize() / 2;
         for (int i = 0; i < slots.size(); i++) {
-            score += Math.floor(calculateDistanceBetweenPoints(slots.get(i).getRow(), slots.get(i).getCol(), centerRow, centerCol));
+
+            score += Math.abs(slots.get(i).getRow() - centerRow) + Math.abs(slots.get(i).getCol() - centerCol);
         }
 
         return score;
@@ -105,7 +111,7 @@ public class Heuristic {
         return score;
     }
 
-    public static int calculateVerticalScore(long state, SlotState player) {
+    private static int calculateVerticalScore(long state, SlotState player) {
         int score = 0;
         for (int row = 0, count; row < StateOperations.getRowSize(); row++) {
             count = 0;
@@ -125,7 +131,7 @@ public class Heuristic {
         return score;
     }
 
-    public static int calculateHorizontalScore(long state, SlotState player) {
+    private static int calculateHorizontalScore(long state, SlotState player) {
         int score = 0;
         for (int col = 0, count; col < StateOperations.getColSize(); col++) {
             count = 0;
@@ -145,7 +151,7 @@ public class Heuristic {
         return score;
     }
 
-    public static int calculateDiagonalScore(long state, SlotState player) {
+    private static int calculateDiagonalScore(long state, SlotState player) {
         int score = 0,
                 rowMax = StateOperations.getRowSize(),
                 colMax = StateOperations.getColSize(),
