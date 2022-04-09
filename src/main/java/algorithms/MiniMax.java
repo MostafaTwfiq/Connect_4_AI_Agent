@@ -12,11 +12,12 @@ public class MiniMax {
     public static TreeNode root;
     private static int maxDepth = 7;
 
-    public static Pair<Long, Double> decision(long state){
+    public static Pair<Long, TreeNode> decision(long state){
         root = new TreeNode(state, 0);
         var value = max(state, root, 0);
         root.val = value.getValue();
-        return value;
+        Pair<Long, TreeNode> val = new Pair<>(value.getKey(), root);
+        return val;
     }
 
     private static Pair<Long, Double> max(long state, TreeNode node, int depth) {

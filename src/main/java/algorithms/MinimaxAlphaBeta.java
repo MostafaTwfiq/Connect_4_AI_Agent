@@ -13,11 +13,12 @@ public class MinimaxAlphaBeta {
 
     static int maxDepth = 10;
     static TreeNode root = null;
-    public static Pair<Long, Double> decision(long state){
+    public static Pair<Long, TreeNode> decision(long state){
         root = new TreeNode(state, 0);
         var value = maximize(state, root, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
         root.val = value.getValue();
-        return value;
+        Pair<Long, TreeNode> val = new Pair<>(value.getKey(), root);
+        return val;
     }
 
     private static Pair<Long, Double> maximize(long state, TreeNode node, double alpha, double beta, int depth) {
