@@ -10,7 +10,7 @@ public class MiniMax {
 
 
     public static TreeNode root;
-    private static int maxDepth = 10;
+    private static int maxDepth = 7;
 
     public static Pair<Long, Double> decision(long state){
         root = new TreeNode(state, 0);
