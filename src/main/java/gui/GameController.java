@@ -3,7 +3,6 @@ package gui;
 import algorithms.MiniMax;
 import algorithms.MinimaxAlphaBeta;
 import algorithms.TreeNode;
-import com.fxgraph.cells.CellGestures;
 import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.Graph;
@@ -169,7 +168,8 @@ public class GameController implements Initializable {
         nodeQueue.add(this.root);
         cellQueue.add(rootCell);
         model.addCell(rootCell);
-        var ind = 0;
+        var level_num = 0;
+        var max_level = 5;
         var prev = root;
         var last = root;
         var v = root.getChildren().size();
@@ -188,11 +188,11 @@ public class GameController implements Initializable {
                 last = c;
             }
             if(node == prev){
-                ind++;
+                level_num++;
                 prev = last;
             }
 
-            if(ind == 4)
+            if(level_num == max_level)
                 break;
         }
 
