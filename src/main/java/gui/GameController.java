@@ -116,12 +116,11 @@ public class GameController implements Initializable {
 
     public void start(Stage stage) throws Exception {
         Graph graph = new Graph();
-
         // Add content to graph
         populateGraph(graph);
 
         // Layout nodes
-        AbegoTreeLayout layout = new AbegoTreeLayout(200, 50, Location.Top);
+        AbegoTreeLayout layout = new AbegoTreeLayout(200, 20, Location.Bottom);
         graph.layout(layout);
 
         // Configure interaction buttons and behavior
@@ -139,6 +138,7 @@ public class GameController implements Initializable {
         Queue<TreeNode> nodeQueue = new LinkedList<>();
         Queue<ICell> cellQueue = new LinkedList<>();
         var rootCell = new TriangleCell();
+        graph.getGraphic(rootCell).setMaxSize(7,7);
         nodeQueue.add(this.root);
         cellQueue.add(rootCell);
         model.addCell(rootCell);
@@ -149,6 +149,7 @@ public class GameController implements Initializable {
             var cell = cellQueue.remove();
             for (var c : node.getChildren()){
                 var cCell = new TriangleCell();
+                graph.getGraphic(cCell).setMaxSize(7,7);
                 Edge edgePC = new Edge(cell, cCell);
                 edgePC.textProperty().set(Double.toString(Math.round(c.getVal() * 100.0)/ 100.0));
                 nodeQueue.add(c);
